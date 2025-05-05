@@ -22,3 +22,42 @@
 git clone <link-repo-của-bạn>
 cd MyApp
 ```
+
+### 2. Cài đặt dependencies
+   
+```bash
+# Sử dụng npm
+npm install
+
+# Hoặc Yarn
+yarn
+```
+
+### 3. Cài CocoaPods (nếu dùng macOS để chạy iOS)
+```bash
+cd ios
+bundle install           # Chỉ lần đầu
+bundle exec pod install
+cd ..
+```
+
+### 4. Khởi động Metro bundler
+```bash
+npm start
+# hoặc
+yarn start
+```
+
+### 5. Chạy ứng dụng ▶️ Android (Windows/macOS/Linux đều được)
+```bash
+npm run android
+# hoặc
+yarn android
+```
+
+### 🍏 iOS (chỉ chạy trên macOS)
+```bash
+npm run ios
+# hoặc
+yarn ios
+```
