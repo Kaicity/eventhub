@@ -1,16 +1,24 @@
-import {View, Text, Button} from 'react-native';
 import React from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Text, View} from 'react-native';
+import ButtonComponent from '../../components/ButtonComponent';
+import {globalStyle} from '../../styles/globalStyles';
 
 const LoginScreen = () => {
   return (
-    <View>
+    <View style={[globalStyle.container, {padding: 16}]}>
       <Text>LoginScreen</Text>
-      <Button
+      {/* <Button
         title="Login"
         onPress={async () => {
           await AsyncStorage.setItem('accessToken', 'itmix');
         }}
+      /> */}
+
+      <ButtonComponent
+        type="link"
+        text="Forget password"
+        icon={<Text>N</Text>}
+        onpress={() => console.log('LOGIN HERE')}
       />
     </View>
   );

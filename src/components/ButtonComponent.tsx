@@ -8,6 +8,9 @@ import {
 } from 'react-native';
 import React, {ReactNode} from 'react';
 import TextComponent from './TextComponent';
+import {globalStyle} from '../styles/globalStyles';
+import {appColors} from '../constants/appColors';
+import {fontFamilies} from '../constants/fontFamilies';
 
 interface Props {
   icon?: ReactNode;
@@ -34,11 +37,29 @@ const ButtonComponent = (props: Props) => {
     iconFlex,
   } = props;
 
-  return (
-    <TouchableOpacity>
-      {icon && iconFlex === 'left' && icon}
-      <TextComponent text={text} color={textColor} styles={textStyles} />
+  return type === 'primary' ? (
+    <TouchableOpacity
+      style={[
+        globalStyle.button,
+        {backgroundColor: color ?? appColors.primary},
+        styles,
+      ]}>
+      {icon && icon}
+      <TextComponent
+        text={text}
+        color={textColor ?? appColors.white}
+        styles={[textStyles, {marginLeft: icon ? 12 : 0}]}
+        flex={icon && iconFlex === 'right' ? 1 : 0}
+      />
       {icon && iconFlex === 'right' && icon}
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity>
+      <TextComponent
+        text={text}
+        color={
+          type === 'link' ? appColors.link : appColors.text
+        }></TextComponent>
     </TouchableOpacity>
   );
 };
