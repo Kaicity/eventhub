@@ -22,4 +22,5 @@ export const globalStyle = StyleSheet.create({
     minHeight: 56,
     flexDirection: 'row',
   },
+  input: {},
 });
