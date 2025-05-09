@@ -8,6 +8,7 @@ import {
 import {appColors} from '../constants/appColors';
 import {globalStyle} from '../styles/globalStyles';
 import TextComponent from './TextComponent';
+import {fontFamilies} from '../constants/fontFamilies';
 
 interface Props {
   icon?: ReactNode;
@@ -45,8 +46,9 @@ const ButtonComponent = (props: Props) => {
       <TextComponent
         text={text}
         color={textColor ?? appColors.white}
-        styles={[textStyles, {marginLeft: icon ? 12 : 0}]}
+        styles={[textStyles, {marginLeft: icon ? 12 : 0}, {fontSize: 16}]}
         flex={icon && iconFlex === 'right' ? 1 : 0}
+        font={fontFamilies.medium}
       />
       {icon && iconFlex === 'right' && icon}
     </TouchableOpacity>
