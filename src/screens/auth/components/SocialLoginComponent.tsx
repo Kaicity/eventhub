@@ -6,7 +6,7 @@ import {
 } from '../../../components';
 import {appColors} from '../../../constants/appColors';
 import {fontFamilies} from '../../../constants/fontFamilies';
-import {Google} from 'iconsax-react-native';
+import {Facebook, Google} from '../../../assets/svg';
 
 const SocialLoginComponent = () => {
   return (
@@ -23,8 +23,19 @@ const SocialLoginComponent = () => {
         type="primary"
         color={appColors.white}
         textColor={appColors.text}
-        icon={<Google size={24} color={appColors.primary} />}
+        textFont={fontFamilies.regular}
         iconFlex="left"
+        icon={<Google />}
+      />
+
+      <ButtonComponent
+        text="Login with Facebook"
+        type="primary"
+        color={appColors.white}
+        textColor={appColors.text}
+        textFont={fontFamilies.regular}
+        iconFlex="left"
+        icon={<Facebook />}
       />
     </SectionComponent>
   );

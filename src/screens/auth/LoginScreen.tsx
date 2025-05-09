@@ -12,6 +12,7 @@ import {
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import SocialLoginComponent from './components/SocialLoginComponent';
+import {fontFamilies} from '../../constants/fontFamilies';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +35,12 @@ const LoginScreen = () => {
       </SectionComponent>
 
       <SectionComponent>
-        <TextComponent text="Sign in" title size={24} />
+        <TextComponent
+          text="Sign in"
+          title
+          size={24}
+          font={fontFamilies.medium}
+        />
         <SpaceComponent height={21} />
         <InputComponent
           placeholder="Email"
@@ -62,7 +68,7 @@ const LoginScreen = () => {
             <TextComponent text="Remember Me" />
           </RowComponent>
           <ButtonComponent
-            text="Forgot Password"
+            text="Forgot Password?"
             type="text"
             onpress={() => {}}
           />
