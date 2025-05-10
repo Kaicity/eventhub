@@ -39,13 +39,18 @@ const ButtonComponent = (props: Props) => {
 
   return type === 'primary' ? (
     <TouchableOpacity
+      onPress={onpress}
       style={[
         globalStyle.button,
         globalStyle.shadow,
-        {backgroundColor: color ?? appColors.primary, marginBottom: 17},
+        {
+          backgroundColor: color ?? appColors.primary,
+          marginBottom: 17,
+          width: '80%',
+        },
         styles,
       ]}>
-      {icon && icon}
+      {icon && iconFlex === 'left' && icon}
       <TextComponent
         text={text}
         color={textColor ?? appColors.white}
@@ -56,12 +61,11 @@ const ButtonComponent = (props: Props) => {
       {icon && iconFlex === 'right' && icon}
     </TouchableOpacity>
   ) : (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onpress}>
       <TextComponent
         text={text}
-        color={
-          type === 'link' ? appColors.link : appColors.text
-        }></TextComponent>
+        color={type === 'link' ? appColors.link : appColors.text}
+      />
     </TouchableOpacity>
   );
 };

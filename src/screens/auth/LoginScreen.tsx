@@ -12,9 +12,8 @@ import {
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import SocialLoginComponent from './components/SocialLoginComponent';
-import {fontFamilies} from '../../constants/fontFamilies';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(true);
@@ -35,15 +34,10 @@ const LoginScreen = () => {
       </SectionComponent>
 
       <SectionComponent>
-        <TextComponent
-          text="Sign in"
-          title
-          size={24}
-          font={fontFamilies.medium}
-        />
+        <TextComponent text="Sign in" title size={24} />
         <SpaceComponent height={21} />
         <InputComponent
-          placeholder="Email"
+          placeholder="davidhoang@gmail.com"
           value={email}
           onchange={val => setEmail(val)}
           allowClear
@@ -77,7 +71,7 @@ const LoginScreen = () => {
 
       <SpaceComponent height={16} />
 
-      <SectionComponent>
+      <SectionComponent styles={{alignItems: 'center'}}>
         <ButtonComponent text="SIGN IN" type="primary" />
       </SectionComponent>
 
@@ -86,7 +80,11 @@ const LoginScreen = () => {
       <SectionComponent>
         <RowComponent justify="center">
           <TextComponent text="Dont't have an account? " />
-          <ButtonComponent text="Sign up" type="link" />
+          <ButtonComponent
+            text="Sign up"
+            type="link"
+            onpress={() => navigation.navigate('SignUpScreen')}
+          />
         </RowComponent>
       </SectionComponent>
     </ContainerComponent>

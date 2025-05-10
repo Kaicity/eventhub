@@ -10,7 +10,7 @@ import {Facebook, Google} from '../../../assets/svg';
 
 const SocialLoginComponent = () => {
   return (
-    <SectionComponent>
+    <SectionComponent styles={{alignItems: 'center'}}>
       <TextComponent
         text="OR"
         color={appColors.gray_3}
