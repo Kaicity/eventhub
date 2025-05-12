@@ -1,5 +1,9 @@
+import {yupResolver} from '@hookform/resolvers/yup';
 import {Lock, Sms, User} from 'iconsax-react-native';
 import React, {useState} from 'react';
+import {useForm, Controller} from 'react-hook-form';
+import authenticationAPI from '../../apis/authApi';
+import {ArrowRight} from '../../assets/svg';
 import {
   ButtonComponent,
   ContainerComponent,
@@ -10,23 +14,53 @@ import {
   TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
+import {LoadingModal} from '../../modals';
+import RegisterSchema from '../../schemas/registerSchema';
 import SocialLoginComponent from './components/SocialLoginComponent';
-import {ArrowRight} from '../../assets/svg';
-
-const initValue = {
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-};
 
 const SignUpScreen = ({navigation}: any) => {
-  const [values, setValues] = useState(initValue);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChangeValue = (key: string, value: string) => {
-    const data: any = {...values};
-    data[`${key}`] = value;
-    setValues(data);
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    resolver: yupResolver(RegisterSchema),
+  });
+
+  const handleRegister = async (data: any) => {
+    setIsLoading(true);
+    try {
+      const res = await authenticationAPI.HandleAuthentication(
+        'register',
+        data,
+        'post',
+      );
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+
+  const renderValidationError = () => {
+    const errorMessages = [
+      errors.username?.message,
+      errors.email?.message,
+      errors.password?.message,
+      errors.confirmPassword?.message,
+    ].filter(Boolean);
+
+    if (errorMessages.length > 0) {
+      return (
+        <TextComponent
+          text={`* ${errorMessages.join('\n* ')}`}
+          color={appColors.danger}
+        />
+      );
+    }
+    return null;
   };
 
   return (
@@ -34,37 +68,97 @@ const SignUpScreen = ({navigation}: any) => {
       <SectionComponent>
         <TextComponent text="Sign up" title size={24} />
         <SpaceComponent height={21} />
-        <InputComponent
-          placeholder="User name"
-          value={values.username}
-          onchange={val => handleChangeValue('username', val)}
-          allowClear
-          affix={<User color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="username"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder="Username"
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.username && appColors.danger}
+              placeholderTextColor={errors.username && appColors.danger}
+              affix={
+                <User
+                  color={errors.username ? appColors.danger : appColors.gray_1}
+                  size={22}
+                />
+              }
+            />
+          )}
         />
-        <InputComponent
-          placeholder="davidhoang@gmail.com"
-          value={values.email}
-          onchange={val => handleChangeValue('email', val)}
-          allowClear
-          affix={<Sms color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="email"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder="davidhoang@gmail.com"
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.email && appColors.danger}
+              placeholderTextColor={errors.email && appColors.danger}
+              affix={
+                <Sms
+                  color={errors.email ? appColors.danger : appColors.gray_1}
+                  size={22}
+                />
+              }
+            />
+          )}
         />
-        <InputComponent
-          placeholder="Your password"
-          value={values.password}
-          onchange={val => handleChangeValue('password', val)}
-          allowClear
-          isPassword
-          affix={<Lock color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="password"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder="Your Password"
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.password && appColors.danger}
+              placeholderTextColor={errors.password && appColors.danger}
+              affix={
+                <Lock
+                  color={errors.password ? appColors.danger : appColors.gray_1}
+                  size={22}
+                />
+              }
+              isPassword
+            />
+          )}
         />
-        <InputComponent
-          placeholder="Confirm password"
-          value={values.confirmPassword}
-          onchange={val => handleChangeValue('confirmPassword', val)}
-          allowClear
-          isPassword
-          affix={<Lock color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="confirmPassword"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder="Confirm password"
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.confirmPassword && appColors.danger}
+              placeholderTextColor={errors.confirmPassword && appColors.danger}
+              affix={
+                <Lock
+                  color={
+                    errors.confirmPassword ? appColors.danger : appColors.gray_1
+                  }
+                  size={22}
+                />
+              }
+              isPassword
+            />
+          )}
         />
       </SectionComponent>
+
+      <SectionComponent>{renderValidationError()}</SectionComponent>
 
       <SpaceComponent height={16} />
 
@@ -74,10 +168,7 @@ const SignUpScreen = ({navigation}: any) => {
           type="primary"
           icon={<ArrowRight />}
           iconFlex="right"
-          onpress={() => {
-            console.log(values);
-            navigation.navigate('VericationScreen');
-          }}
+          onpress={handleSubmit(handleRegister)}
         />
       </SectionComponent>
 
@@ -93,6 +184,7 @@ const SignUpScreen = ({navigation}: any) => {
           />
         </RowComponent>
       </SectionComponent>
+      <LoadingModal visible={isLoading} />
     </ContainerComponent>
   );
 };

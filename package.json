@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-navigation/bottom-tabs": "^7.3.12",
     "@react-navigation/drawer": "^7.3.11",
@@ -19,6 +20,7 @@
     "iconsax-react-native": "^0.0.8",
     "query-string": "^9.1.2",
     "react": "19.0.0",
+    "react-hook-form": "^7.56.3",
     "react-native": "0.79.2",
     "react-native-gesture-handler": "^2.25.0",
     "react-native-reanimated": "^3.17.5",
@@ -27,7 +29,8 @@
     "react-native-svg": "^15.11.2",
     "react-native-svg-transformer": "^1.5.1",
     "react-native-swiper": "^1.6.0",
-    "react-native-vector-icons": "^10.2.0"
+    "react-native-vector-icons": "^10.2.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

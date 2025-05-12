@@ -15,6 +15,8 @@ interface Props {
   value: string;
   onchange: (val: string) => void;
   placeholder?: string;
+  placeholderTextColor?: string;
+  borderColor?: string;
   affix?: ReactNode;
   suffix?: ReactNode;
   isPassword?: boolean;
@@ -27,6 +29,8 @@ const InputComponent = (props: Props) => {
     value,
     onchange,
     placeholder,
+    placeholderTextColor,
+    borderColor,
     affix,
     suffix,
     isPassword,
@@ -37,7 +41,11 @@ const InputComponent = (props: Props) => {
   const [isShowPassword, setIsShowPassword] = useState(isPassword ?? false);
 
   return (
-    <View style={[styles.inputContainer]}>
+    <View
+      style={[
+        styles.inputContainer,
+        {borderColor: borderColor ?? appColors.gray_3},
+      ]}>
       {affix ?? affix}
       <TextInput
         style={[styles.input, globalStyle.text]}
@@ -45,7 +53,7 @@ const InputComponent = (props: Props) => {
         onChange={e => onchange(e.nativeEvent.text)}
         placeholder={placeholder ?? ''}
         secureTextEntry={isShowPassword}
-        placeholderTextColor={appColors.gray_2}
+        placeholderTextColor={placeholderTextColor ?? appColors.gray_2}
         keyboardType={type ?? 'default'}
       />
       {suffix ?? suffix}
@@ -62,6 +70,7 @@ const InputComponent = (props: Props) => {
             color={appColors.gray_1}
           />
         ) : (
+          value &&
           value.length > 0 &&
           allowClear && (
             <AntDesign name="close" size={22} color={appColors.text} />
@@ -79,7 +88,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: appColors.gray_3,
     width: '100%',
     minHeight: 56,
     justifyContent: 'center',

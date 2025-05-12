@@ -20,29 +20,17 @@ const OnboardingScreen = ({navigation}: any) => {
         activeDotColor={appColors.white}>
         <Image
           source={require('../../assets/images/onboarding-1.png')}
-          style={{
-            width: appInfo.sizes.WIDTH,
-            height: appInfo.sizes.HEIGHT,
-            resizeMode: 'cover',
-          }}
+          style={{flex: 1, width: appInfo.sizes.WIDTH, resizeMode: 'cover'}}
         />
 
         <Image
           source={require('../../assets/images/onboarding-2.png')}
-          style={{
-            width: appInfo.sizes.WIDTH,
-            height: appInfo.sizes.HEIGHT,
-            resizeMode: 'cover',
-          }}
+          style={{flex: 1, width: appInfo.sizes.WIDTH, resizeMode: 'cover'}}
         />
 
         <Image
           source={require('../../assets/images/onboarding-3.png')}
-          style={{
-            width: appInfo.sizes.WIDTH,
-            height: appInfo.sizes.HEIGHT,
-            resizeMode: 'cover',
-          }}
+          style={{flex: 1, width: appInfo.sizes.WIDTH, resizeMode: 'cover'}}
         />
       </Swiper>
       <View
@@ -81,11 +69,3 @@ const OnboardingScreen = ({navigation}: any) => {
 };
 
 export default OnboardingScreen;
-
-const styles = StyleSheet.create({
-  text: {
-    color: appColors.white,
-    fontSize: 18,
-    fontWeight: '500',
-  },
-});
