@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Swiper from 'react-native-swiper';
-import {globalStyle} from '../../styles/globalStyles';
-import {appInfo} from '../../constants/appInfos';
-import {appColors} from '../../constants/appColors';
 import {TextComponent} from '../../components';
+import {appColors} from '../../constants/appColors';
+import {appInfo} from '../../constants/appInfos';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {globalStyle} from '../../styles/globalStyles';
 
 const OnboardingScreen = ({navigation}: any) => {
   const [index, setIndex] = useState(0);
@@ -64,6 +64,7 @@ const OnboardingScreen = ({navigation}: any) => {
             font={fontFamilies.medium}
           />
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() =>
             index < 2 ? setIndex(index + 1) : navigation.navigate('LoginScreen')

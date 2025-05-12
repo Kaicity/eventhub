@@ -11,6 +11,7 @@ import {
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import SocialLoginComponent from './components/SocialLoginComponent';
+import {ArrowRight} from '../../assets/svg';
 
 const initValue = {
   username: '',
@@ -69,10 +70,13 @@ const SignUpScreen = ({navigation}: any) => {
 
       <SectionComponent>
         <ButtonComponent
-          text="SIGN Up"
+          text="SIGN UP"
           type="primary"
+          icon={<ArrowRight />}
+          iconFlex="right"
           onpress={() => {
             console.log(values);
+            navigation.navigate('VericationScreen');
           }}
         />
       </SectionComponent>
@@ -81,9 +85,9 @@ const SignUpScreen = ({navigation}: any) => {
 
       <SectionComponent>
         <RowComponent justify="center">
-          <TextComponent text="Dont't have an account? " />
+          <TextComponent text="Already have an account? " />
           <ButtonComponent
-            text="Sign in"
+            text="Signin"
             type="link"
             onpress={() => navigation.navigate('LoginScreen')}
           />

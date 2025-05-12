@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {ArrowLeft} from 'iconsax-react-native';
-import React, {ReactNode} from 'react';
+import React, {Children, ReactNode} from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -24,7 +24,6 @@ interface Props {
 
 const ContainerComponent = (props: Props) => {
   const {isImageBackground, isScroll, title, children, back} = props;
-
   const navigation: any = useNavigation();
 
   const headerComponent = () => {
@@ -54,27 +53,26 @@ const ContainerComponent = (props: Props) => {
             )}
           </RowComponent>
         )}
-        {returnContainer}
+
+        {isScroll ? (
+          <ScrollView style={{flex: 1}}>{children}</ScrollView>
+        ) : (
+          <View style={{flex: 1}}>{children}</View>
+        )}
       </View>
     );
   };
-
-  const returnContainer = isScroll ? (
-    <ScrollView style={{flex: 1}}>{children}</ScrollView>
-  ) : (
-    <View style={{flex: 1}}>{children}</View>
-  );
 
   return isImageBackground ? (
     <ImageBackground
       source={require('../assets/images/splash-img.png')}
       style={{flex: 1}}
       resizeMode="cover">
-      <SafeAreaView style={{flex: 1}}> {headerComponent()}</SafeAreaView>
+      <SafeAreaView style={{flex: 1}}>{headerComponent()}</SafeAreaView>
     </ImageBackground>
   ) : (
     <SafeAreaView style={[globalStyle.container]}>
-      <View> {headerComponent()}</View>
+      {headerComponent()}
     </SafeAreaView>
   );
 };

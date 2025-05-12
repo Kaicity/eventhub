@@ -12,11 +12,22 @@ import {
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import SocialLoginComponent from './components/SocialLoginComponent';
+import {ArrowRight} from '../../assets/svg';
+import authenticationAPI from '../../apis/authApi';
 
 const LoginScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(true);
+
+  const handleLogin = async () => {
+    try {
+      const res = await authenticationAPI.HandleAuthentication('hello');
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <ContainerComponent isImageBackground isScroll>
@@ -64,15 +75,23 @@ const LoginScreen = ({navigation}: any) => {
           <ButtonComponent
             text="Forgot Password?"
             type="text"
-            onpress={() => {}}
+            onpress={() => {
+              navigation.navigate('ForgotPasswordScreen');
+            }}
           />
         </RowComponent>
       </SectionComponent>
 
       <SpaceComponent height={16} />
 
-      <SectionComponent styles={{alignItems: 'center'}}>
-        <ButtonComponent text="SIGN IN" type="primary" />
+      <SectionComponent>
+        <ButtonComponent
+          onpress={handleLogin}
+          text="SIGN IN"
+          type="primary"
+          icon={<ArrowRight />}
+          iconFlex="right"
+        />
       </SectionComponent>
 
       <SocialLoginComponent />
