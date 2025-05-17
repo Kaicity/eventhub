@@ -14,18 +14,44 @@ import {appColors} from '../../constants/appColors';
 import SocialLoginComponent from './components/SocialLoginComponent';
 import {ArrowRight} from '../../assets/svg';
 import authenticationAPI from '../../apis/authApi';
+import {Controller, useForm} from 'react-hook-form';
+import LoginSchema from '../../schemas/loginSchema';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {LoadingModal} from '../../modals';
+import {showToastMessage} from '../../libs';
 
 const LoginScreen = ({navigation}: any) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const [isRemember, setIsRemember] = useState(true);
 
-  const handleLogin = async () => {
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    resolver: yupResolver(LoginSchema),
+  });
+
+  const handleLogin = async (data: any) => {
+    const {...submitData} = data;
+    setIsLoading(true);
     try {
-      const res = await authenticationAPI.HandleAuthentication('hello');
+      const res = await authenticationAPI.HandleAuthentication(
+        '/login',
+        submitData,
+        'post',
+      );
+
       console.log(res);
+      showToastMessage({type: 'success', text1: 'Successfully here'});
+
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,21 +73,54 @@ const LoginScreen = ({navigation}: any) => {
       <SectionComponent>
         <TextComponent text="Sign in" title size={24} />
         <SpaceComponent height={21} />
-        <InputComponent
-          placeholder="davidhoang@gmail.com"
-          value={email}
-          onchange={val => setEmail(val)}
-          allowClear
-          affix={<Sms color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="email"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder={
+                errors.email ? errors.email.message : 'davidhoang@gmail.com'
+              }
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.email && appColors.danger}
+              placeholderTextColor={errors.email && appColors.danger}
+              affix={
+                <Sms
+                  color={errors.email ? appColors.danger : appColors.gray_1}
+                  size={22}
+                />
+              }
+            />
+          )}
         />
-        <InputComponent
-          placeholder="Password"
-          value={password}
-          onchange={val => setPassword(val)}
-          allowClear
-          isPassword
-          affix={<Lock color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="password"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder={
+                errors.password ? errors.password.message : 'Your Password'
+              }
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.password && appColors.danger}
+              placeholderTextColor={errors.password && appColors.danger}
+              affix={
+                <Lock
+                  color={errors.password ? appColors.danger : appColors.gray_1}
+                  size={22}
+                />
+              }
+              isPassword
+            />
+          )}
         />
+
         <RowComponent justify="space-between">
           <RowComponent onPress={() => setIsRemember(!isRemember)}>
             <Switch
@@ -86,7 +145,7 @@ const LoginScreen = ({navigation}: any) => {
 
       <SectionComponent>
         <ButtonComponent
-          onpress={handleLogin}
+          onpress={handleSubmit(handleLogin)}
           text="SIGN IN"
           type="primary"
           icon={<ArrowRight />}
@@ -106,6 +165,7 @@ const LoginScreen = ({navigation}: any) => {
           />
         </RowComponent>
       </SectionComponent>
+      <LoadingModal visible={isLoading} />
     </ContainerComponent>
   );
 };
