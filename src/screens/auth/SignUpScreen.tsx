@@ -17,9 +17,14 @@ import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import RegisterSchema from '../../schemas/registerSchema';
 import SocialLoginComponent from './components/SocialLoginComponent';
+import {useDispatch} from 'react-redux';
+import {addAuth} from '../../redux/reducers/authReducers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUpScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   const {
     control,
@@ -30,23 +35,31 @@ const SignUpScreen = ({navigation}: any) => {
   });
 
   const handleRegister = async (data: any) => {
+    //Không gửi confirm password chỉ để xác thực với password
+    const {confirmPassword, ...submitData} = data;
+
     setIsLoading(true);
     try {
       const res = await authenticationAPI.HandleAuthentication(
-        'register',
-        data,
+        '/register',
+        submitData,
         'post',
       );
+
+      dispatch(addAuth(res.data));
+      await AsyncStorage.setItem('auth', JSON.stringify(res.data));
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
+    } finally {
       setIsLoading(false);
     }
   };
 
   const renderValidationError = () => {
     const errorMessages = [
-      errors.username?.message,
+      errors.fullname?.message,
       errors.email?.message,
       errors.password?.message,
       errors.confirmPassword?.message,
@@ -70,19 +83,19 @@ const SignUpScreen = ({navigation}: any) => {
         <SpaceComponent height={21} />
 
         <Controller
-          name="username"
+          name="fullname"
           control={control}
           render={({field: {onChange, value}}) => (
             <InputComponent
-              placeholder="Username"
+              placeholder="full name"
               value={value}
               onchange={onChange}
               allowClear
-              borderColor={errors.username && appColors.danger}
-              placeholderTextColor={errors.username && appColors.danger}
+              borderColor={errors.fullname && appColors.danger}
+              placeholderTextColor={errors.fullname && appColors.danger}
               affix={
                 <User
-                  color={errors.username ? appColors.danger : appColors.gray_1}
+                  color={errors.fullname ? appColors.danger : appColors.gray_1}
                   size={22}
                 />
               }
