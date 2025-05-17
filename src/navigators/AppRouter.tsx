@@ -18,14 +18,10 @@ const AppRouter = () => {
   const checkLogin = async () => {
     const res = await getItem();
 
-    console.log(res);
-
-    res && dispatch(addAuth(res));
+    res && dispatch(addAuth(JSON.parse(res)));
   };
 
-  console.log(auth.accesstoken);
-
-  return <>{auth.accesstoken ? <MainNavigator /> : <AuthNavigator />}</>;
+  return <>{auth.data?.accesstoken ? <MainNavigator /> : <AuthNavigator />}</>;
 };
 
 export default AppRouter;
