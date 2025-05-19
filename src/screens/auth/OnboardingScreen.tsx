@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Swiper from 'react-native-swiper';
-import {globalStyle} from '../../styles/globalStyles';
-import {appInfo} from '../../constants/appInfos';
-import {appColors} from '../../constants/appColors';
 import {TextComponent} from '../../components';
+import {appColors} from '../../constants/appColors';
+import {appInfo} from '../../constants/appInfos';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {globalStyle} from '../../styles/globalStyles';
 
 const OnboardingScreen = ({navigation}: any) => {
   const [index, setIndex] = useState(0);
@@ -20,29 +20,17 @@ const OnboardingScreen = ({navigation}: any) => {
         activeDotColor={appColors.white}>
         <Image
           source={require('../../assets/images/onboarding-1.png')}
-          style={{
-            width: appInfo.sizes.WIDTH,
-            height: appInfo.sizes.HEIGHT,
-            resizeMode: 'cover',
-          }}
+          style={{flex: 1, width: appInfo.sizes.WIDTH, resizeMode: 'cover'}}
         />
 
         <Image
           source={require('../../assets/images/onboarding-2.png')}
-          style={{
-            width: appInfo.sizes.WIDTH,
-            height: appInfo.sizes.HEIGHT,
-            resizeMode: 'cover',
-          }}
+          style={{flex: 1, width: appInfo.sizes.WIDTH, resizeMode: 'cover'}}
         />
 
         <Image
           source={require('../../assets/images/onboarding-3.png')}
-          style={{
-            width: appInfo.sizes.WIDTH,
-            height: appInfo.sizes.HEIGHT,
-            resizeMode: 'cover',
-          }}
+          style={{flex: 1, width: appInfo.sizes.WIDTH, resizeMode: 'cover'}}
         />
       </Swiper>
       <View
@@ -64,6 +52,7 @@ const OnboardingScreen = ({navigation}: any) => {
             font={fontFamilies.medium}
           />
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() =>
             index < 2 ? setIndex(index + 1) : navigation.navigate('LoginScreen')
@@ -80,11 +69,3 @@ const OnboardingScreen = ({navigation}: any) => {
 };
 
 export default OnboardingScreen;
-
-const styles = StyleSheet.create({
-  text: {
-    color: appColors.white,
-    fontSize: 18,
-    fontWeight: '500',
-  },
-});

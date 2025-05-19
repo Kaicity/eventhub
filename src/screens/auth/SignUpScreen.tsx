@@ -1,5 +1,9 @@
+import {yupResolver} from '@hookform/resolvers/yup';
 import {Lock, Sms, User} from 'iconsax-react-native';
 import React, {useState} from 'react';
+import {useForm, Controller} from 'react-hook-form';
+import authenticationAPI from '../../apis/authApi';
+import {ArrowRight} from '../../assets/svg';
 import {
   ButtonComponent,
   ContainerComponent,
@@ -10,22 +14,66 @@ import {
   TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
+import {LoadingModal} from '../../modals';
+import RegisterSchema from '../../schemas/registerSchema';
 import SocialLoginComponent from './components/SocialLoginComponent';
-
-const initValue = {
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-};
+import {useDispatch} from 'react-redux';
+import {addAuth} from '../../redux/reducers/authReducers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUpScreen = ({navigation}: any) => {
-  const [values, setValues] = useState(initValue);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChangeValue = (key: string, value: string) => {
-    const data: any = {...values};
-    data[`${key}`] = value;
-    setValues(data);
+  const dispatch = useDispatch();
+
+  const {
+    control,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    resolver: yupResolver(RegisterSchema),
+  });
+
+  const handleRegister = async (data: any) => {
+    //Không gửi confirm password chỉ để xác thực với password
+    const {confirmPassword, ...submitData} = data;
+
+    setIsLoading(true);
+    try {
+      const res = await authenticationAPI.HandleAuthentication(
+        '/register',
+        submitData,
+        'post',
+      );
+
+      dispatch(addAuth(res.data));
+      await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const renderValidationError = () => {
+    const errorMessages = [
+      errors.fullname?.message,
+      errors.email?.message,
+      errors.password?.message,
+      errors.confirmPassword?.message,
+    ].filter(Boolean);
+
+    if (errorMessages.length > 0) {
+      return (
+        <TextComponent
+          text={`* ${errorMessages.join('\n* ')}`}
+          color={appColors.danger}
+        />
+      );
+    }
+    return null;
   };
 
   return (
@@ -33,47 +81,107 @@ const SignUpScreen = ({navigation}: any) => {
       <SectionComponent>
         <TextComponent text="Sign up" title size={24} />
         <SpaceComponent height={21} />
-        <InputComponent
-          placeholder="User name"
-          value={values.username}
-          onchange={val => handleChangeValue('username', val)}
-          allowClear
-          affix={<User color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="fullname"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder="full name"
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.fullname && appColors.danger}
+              placeholderTextColor={errors.fullname && appColors.danger}
+              affix={
+                <User
+                  color={errors.fullname ? appColors.danger : appColors.gray_1}
+                  size={22}
+                />
+              }
+            />
+          )}
         />
-        <InputComponent
-          placeholder="davidhoang@gmail.com"
-          value={values.email}
-          onchange={val => handleChangeValue('email', val)}
-          allowClear
-          affix={<Sms color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="email"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder="davidhoang@gmail.com"
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.email && appColors.danger}
+              placeholderTextColor={errors.email && appColors.danger}
+              affix={
+                <Sms
+                  color={errors.email ? appColors.danger : appColors.gray_1}
+                  size={22}
+                />
+              }
+            />
+          )}
         />
-        <InputComponent
-          placeholder="Your password"
-          value={values.password}
-          onchange={val => handleChangeValue('password', val)}
-          allowClear
-          isPassword
-          affix={<Lock color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="password"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder="Your Password"
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.password && appColors.danger}
+              placeholderTextColor={errors.password && appColors.danger}
+              affix={
+                <Lock
+                  color={errors.password ? appColors.danger : appColors.gray_1}
+                  size={22}
+                />
+              }
+              isPassword
+            />
+          )}
         />
-        <InputComponent
-          placeholder="Confirm password"
-          value={values.confirmPassword}
-          onchange={val => handleChangeValue('confirmPassword', val)}
-          allowClear
-          isPassword
-          affix={<Lock color={appColors.gray_1} size={22} />}
+
+        <Controller
+          name="confirmPassword"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              placeholder="Confirm password"
+              value={value}
+              onchange={onChange}
+              allowClear
+              borderColor={errors.confirmPassword && appColors.danger}
+              placeholderTextColor={errors.confirmPassword && appColors.danger}
+              affix={
+                <Lock
+                  color={
+                    errors.confirmPassword ? appColors.danger : appColors.gray_1
+                  }
+                  size={22}
+                />
+              }
+              isPassword
+            />
+          )}
         />
       </SectionComponent>
+
+      <SectionComponent>{renderValidationError()}</SectionComponent>
 
       <SpaceComponent height={16} />
 
       <SectionComponent>
         <ButtonComponent
-          text="SIGN Up"
+          text="SIGN UP"
           type="primary"
-          onpress={() => {
-            console.log(values);
-          }}
+          icon={<ArrowRight />}
+          iconFlex="right"
+          onpress={handleSubmit(handleRegister)}
         />
       </SectionComponent>
 
@@ -81,14 +189,15 @@ const SignUpScreen = ({navigation}: any) => {
 
       <SectionComponent>
         <RowComponent justify="center">
-          <TextComponent text="Dont't have an account? " />
+          <TextComponent text="Already have an account? " />
           <ButtonComponent
-            text="Sign in"
+            text="Signin"
             type="link"
             onpress={() => navigation.navigate('LoginScreen')}
           />
         </RowComponent>
       </SectionComponent>
+      <LoadingModal visible={isLoading} />
     </ContainerComponent>
   );
 };
