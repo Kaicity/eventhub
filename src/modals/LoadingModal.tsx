@@ -24,8 +24,8 @@ const LoadingModal = (props: Props) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <ActivityIndicator color={appColors.white} size={32} />
-        <TextComponent text="Loading" color={appColors.white} />
+        <ActivityIndicator color={appColors.primary} size={32} />
+        <TextComponent text={mess ?? 'Loading'} color={appColors.primary} />
       </View>
     </Modal>
   );

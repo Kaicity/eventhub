@@ -1,5 +1,5 @@
 import {Lock, Sms} from 'iconsax-react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Switch} from 'react-native';
 import {
   ButtonComponent,
@@ -19,22 +19,59 @@ import LoginSchema from '../../schemas/loginSchema';
 import {yupResolver} from '@hookform/resolvers/yup';
 import {LoadingModal} from '../../modals';
 import {showToastMessage} from '../../libs';
+import {useDispatch} from 'react-redux';
+import {addAuth} from '../../redux/reducers/authReducers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const REMEMBER_KEY = 'rememberCredentials';
 
 const LoginScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
-
   const [isRemember, setIsRemember] = useState(true);
+
+  const isDispatch = useDispatch();
+
+  // Giá trị ghi nhớ
+  const [initialEmail, setInitialEmail] = useState('');
+  const [initialPassword, setInitialPassword] = useState('');
+
+  useEffect(() => {
+    const loadRemembered = async () => {
+      try {
+        const creds = await AsyncStorage.getItem(REMEMBER_KEY);
+        if (creds) {
+          const {email, password} = JSON.parse(creds);
+          setInitialEmail(email);
+          setInitialPassword(password);
+        }
+      } catch (e) {
+        // ignore
+      }
+    };
+    loadRemembered();
+  }, []);
 
   const {
     control,
     handleSubmit,
     formState: {errors},
+    setValue,
   } = useForm({
     resolver: yupResolver(LoginSchema),
+    defaultValues: {
+      email: initialEmail,
+      password: initialPassword,
+    },
   });
+
+  useEffect(() => {
+    setValue('email', initialEmail);
+    setValue('password', initialPassword);
+  }, [initialEmail, initialPassword, setValue]);
 
   const handleLogin = async (data: any) => {
     const {...submitData} = data;
+
     setIsLoading(true);
     try {
       const res = await authenticationAPI.HandleAuthentication(
@@ -43,12 +80,30 @@ const LoginScreen = ({navigation}: any) => {
         'post',
       );
 
-      console.log(res);
-      showToastMessage({type: 'success', text1: 'Successfully here'});
+      // set gia tri auth cho store
+      isDispatch(addAuth(res.data));
+
+      await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+
+      // xu ly ghi nho thong tin dang nhap
+      await AsyncStorage.setItem('existUser', submitData.email);
+
+      if (isRemember) {
+        await AsyncStorage.setItem(
+          REMEMBER_KEY,
+          JSON.stringify({
+            email: submitData.email,
+            password: submitData.password,
+          }),
+        );
+      } else {
+        await AsyncStorage.removeItem(REMEMBER_KEY);
+      }
 
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      showToastMessage({type: 'error', text1: error.message});
       setIsLoading(false);
     } finally {
       setIsLoading(false);
