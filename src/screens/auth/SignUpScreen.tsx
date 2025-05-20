@@ -37,18 +37,29 @@ const SignUpScreen = ({navigation}: any) => {
   const handleRegister = async (data: any) => {
     //Không gửi confirm password chỉ để xác thực với password
     const {confirmPassword, ...submitData} = data;
-
     setIsLoading(true);
     try {
+      // const res = await authenticationAPI.HandleAuthentication(
+      //   '/register',
+      //   submitData,
+      //   'post',
+      // );
+
+      // dispatch(addAuth(res.data));
+      // await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+
       const res = await authenticationAPI.HandleAuthentication(
-        '/register',
-        submitData,
+        '/verification',
+        {email: submitData.email},
         'post',
       );
 
-      dispatch(addAuth(res.data));
-      await AsyncStorage.setItem('auth', JSON.stringify(res.data));
-      setIsLoading(false);
+      console.log(res);
+
+      navigation.navigate('VerificationScreen', {
+        code: res.data.data.code,
+        ...submitData,
+      });
     } catch (error) {
       console.log(error);
       setIsLoading(false);

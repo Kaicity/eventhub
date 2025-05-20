@@ -55,7 +55,9 @@ const ContainerComponent = (props: Props) => {
         )}
 
         {isScroll ? (
-          <ScrollView style={{flex: 1}}>{children}</ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+            {children}
+          </ScrollView>
         ) : (
           <View style={{flex: 1}}>{children}</View>
         )}
