@@ -54,8 +54,6 @@ const SignUpScreen = ({navigation}: any) => {
         'post',
       );
 
-      console.log(res);
-
       navigation.navigate('VerificationScreen', {
         code: res.data.data.code,
         ...submitData,
