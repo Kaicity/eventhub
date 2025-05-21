@@ -23,8 +23,6 @@ const AuthNavigator = () => {
     res && setIsExistingUser(true);
   };
 
-  console.log(isExistingUser);
-
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {!isExistingUser && (

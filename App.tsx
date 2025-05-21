@@ -5,6 +5,7 @@ import {Provider} from 'react-redux';
 import AppRouter from './src/navigators/AppRouter';
 import store from './src/redux/store';
 import Toast from 'react-native-toast-message';
+import {toastConfig} from './src/libs';
 
 const App = () => {
   return (
@@ -20,7 +21,7 @@ const App = () => {
           <AppRouter />
         </NavigationContainer>
       </Provider>
-      <Toast />
+      <Toast config={toastConfig} />
     </>
   );
 };

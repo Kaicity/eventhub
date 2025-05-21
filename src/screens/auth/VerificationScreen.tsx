@@ -11,14 +11,34 @@ import {StyleSheet, TextInput} from 'react-native';
 import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {ArrowRight, ArrowRightGray} from '../../assets/svg';
+import authenticationAPI from '../../apis/authApi';
+import {LoadingModal} from '../../modals';
+import {showToastMessage} from '../../libs';
+import {useDispatch} from 'react-redux';
+import {addAuth} from '../../redux/reducers/authReducers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const VerificationScreen = ({navigation, route}: any) => {
   const {code, fullname, email, password} = route.params;
 
+  const [currentCode, setCurrentCode] = useState(code);
   const [digits, setDigits] = useState(['', '', '', '']);
-  const [verifyCode, setVerifyCode] = useState('');
+  const [newCode, setNewCode] = useState<number>(0);
+  const [limit, setLimit] = useState(120);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Tạo 4 ref cho 4 input
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (limit > 0) {
+      const interval = setInterval(() => {
+        setLimit(limit => limit - 1);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [limit]);
+
   const inputRefs = [
     useRef<TextInput>(null),
     useRef<TextInput>(null),
@@ -39,14 +59,76 @@ const VerificationScreen = ({navigation, route}: any) => {
     // Nếu đã nhập đủ 4 ký tự, set verifycode
     const joinedCode = newDigits.join('');
     if (joinedCode.length === 4 && !newDigits.includes('')) {
-      setVerifyCode(joinedCode);
+      setNewCode(Number(joinedCode));
     } else {
-      setVerifyCode('');
+      setNewCode(0);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    setIsLoading(true);
+    try {
+      const res: any = await authenticationAPI.HandleAuthentication(
+        '/verification',
+        {email},
+        'post',
+      );
+
+      //reset gia tri
+      setCurrentCode(res.data.data.code);
+      setLimit(120);
+      setDigits(['', '', '', '']);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(`Can not send verification code ${error}`);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerification = async () => {
+    if (limit > 0) {
+      if (newCode !== currentCode) {
+        showToastMessage({
+          type: 'error',
+          text1: 'Invalid verification code, please try again',
+        });
+      } else {
+        const data = {fullname, email, password};
+        setIsLoading(true);
+        try {
+          const res = await authenticationAPI.HandleAuthentication(
+            '/register',
+            data,
+            'post',
+          );
+
+          dispatch(addAuth(res.data));
+          await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+
+          setIsLoading(false);
+        } catch (error) {
+          console.log(`Can not create new user ${error}`);
+          showToastMessage({
+            type: 'error',
+            text1: 'User email has been registered!',
+          });
+          setIsLoading(false);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    } else {
+      showToastMessage({
+        type: 'error',
+        text1: 'Verification code expired, please resend!',
+      });
     }
   };
 
   return (
-    <ContainerComponent back>
+    <ContainerComponent back isScroll>
       <SectionComponent>
         <TextComponent text="Verification" title />
         <SpaceComponent height={10} />
@@ -74,20 +156,43 @@ const VerificationScreen = ({navigation, route}: any) => {
             />
           ))}
         </RowComponent>
+      </SectionComponent>
 
-        <SpaceComponent height={26} />
+      <SectionComponent styles={{marginTop: 40}}>
         <ButtonComponent
-          disable={!verifyCode}
+          disable={!newCode}
           text="Continue"
           type="primary"
-          icon={verifyCode ? <ArrowRight /> : <ArrowRightGray />}
+          icon={newCode ? <ArrowRight /> : <ArrowRightGray />}
           iconFlex="right"
-          onpress={() => {
-            console.log(digits);
-            console.log(verifyCode);
-          }}
+          onpress={handleVerification}
         />
       </SectionComponent>
+
+      <SectionComponent>
+        {limit > 0 ? (
+          <RowComponent justify="center">
+            <TextComponent text="Re-send code in " flex={0} />
+            <TextComponent
+              text={`0${Math.floor(limit / 60)}:${limit % 60 < 10 ? '0' : ''}${
+                limit % 60
+              }`}
+              flex={0}
+              color={appColors.link}
+            />
+          </RowComponent>
+        ) : (
+          <RowComponent justify="center">
+            <ButtonComponent
+              text="Re-send email verification code"
+              type="link"
+              onpress={handleResendVerification}
+            />
+          </RowComponent>
+        )}
+      </SectionComponent>
+
+      <LoadingModal visible={isLoading} />
     </ContainerComponent>
   );
 };

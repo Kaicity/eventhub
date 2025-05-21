@@ -1,7 +1,7 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import {Lock, Sms, User} from 'iconsax-react-native';
 import React, {useState} from 'react';
-import {useForm, Controller} from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 import authenticationAPI from '../../apis/authApi';
 import {ArrowRight} from '../../assets/svg';
 import {
@@ -17,14 +17,9 @@ import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import RegisterSchema from '../../schemas/registerSchema';
 import SocialLoginComponent from './components/SocialLoginComponent';
-import {useDispatch} from 'react-redux';
-import {addAuth} from '../../redux/reducers/authReducers';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUpScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const dispatch = useDispatch();
 
   const {
     control,
@@ -39,15 +34,6 @@ const SignUpScreen = ({navigation}: any) => {
     const {confirmPassword, ...submitData} = data;
     setIsLoading(true);
     try {
-      // const res = await authenticationAPI.HandleAuthentication(
-      //   '/register',
-      //   submitData,
-      //   'post',
-      // );
-
-      // dispatch(addAuth(res.data));
-      // await AsyncStorage.setItem('auth', JSON.stringify(res.data));
-
       const res = await authenticationAPI.HandleAuthentication(
         '/verification',
         {email: submitData.email},
