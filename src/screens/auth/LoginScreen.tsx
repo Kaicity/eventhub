@@ -27,7 +27,7 @@ const REMEMBER_KEY = 'rememberCredentials';
 
 const LoginScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRemember, setIsRemember] = useState(true);
+  const [isRemember, setIsRemember] = useState(false);
 
   const isDispatch = useDispatch();
 

@@ -1,6 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {
+  ChangePasswordScreen,
   ForgotPasswordScreen,
   LoginScreen,
   SignUpScreen,
@@ -34,6 +35,10 @@ const AuthNavigator = () => {
       <Stack.Screen
         name="ForgotPasswordScreen"
         component={ForgotPasswordScreen}
+      />
+      <Stack.Screen
+        name="ChangePasswordScreen"
+        component={ChangePasswordScreen}
       />
     </Stack.Navigator>
   );

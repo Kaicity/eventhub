@@ -78,6 +78,7 @@ const VerificationScreen = ({navigation, route}: any) => {
       setCurrentCode(res.data.data.code);
       setLimit(120);
       setDigits(['', '', '', '']);
+
       setIsLoading(false);
     } catch (error) {
       console.log(`Can not send verification code ${error}`);

@@ -1,3 +1,4 @@
+import ChangePasswordScreen from './auth/ChangePasswordScreen';
 import ForgotPasswordScreen from './auth/ForgotPasswordScreen';
 import LoginScreen from './auth/LoginScreen';
 import SignUpScreen from './auth/SignUpScreen';
@@ -12,4 +13,5 @@ export {
   SignUpScreen,
   VerificationScreen,
   ForgotPasswordScreen,
+  ChangePasswordScreen,
 };
