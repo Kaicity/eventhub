@@ -1,5 +1,6 @@
 import Facebook from './facebook-icon.svg';
 import Google from './google-icon.svg';
 import ArrowRight from './arrow-right.svg';
+import ArrowRightGray from './arrow-right-gray.svg';
 
-export {Facebook, Google, ArrowRight};
+export {Facebook, Google, ArrowRight, ArrowRightGray};

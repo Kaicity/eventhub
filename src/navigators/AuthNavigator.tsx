@@ -1,10 +1,11 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useEffect, useState} from 'react';
 import {
+  ChangePasswordScreen,
   ForgotPasswordScreen,
   LoginScreen,
   SignUpScreen,
-  VericationScreen,
+  VerificationScreen,
 } from '../screens';
 import OnboardingScreen from '../screens/auth/OnboardingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -23,8 +24,6 @@ const AuthNavigator = () => {
     res && setIsExistingUser(true);
   };
 
-  console.log(isExistingUser);
-
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {!isExistingUser && (
@@ -32,10 +31,14 @@ const AuthNavigator = () => {
       )}
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-      <Stack.Screen name="VericationScreen" component={VericationScreen} />
+      <Stack.Screen name="VerificationScreen" component={VerificationScreen} />
       <Stack.Screen
         name="ForgotPasswordScreen"
         component={ForgotPasswordScreen}
+      />
+      <Stack.Screen
+        name="ChangePasswordScreen"
+        component={ChangePasswordScreen}
       />
     </Stack.Navigator>
   );

@@ -27,7 +27,7 @@ const REMEMBER_KEY = 'rememberCredentials';
 
 const LoginScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRemember, setIsRemember] = useState(true);
+  const [isRemember, setIsRemember] = useState(false);
 
   const isDispatch = useDispatch();
 
@@ -102,8 +102,11 @@ const LoginScreen = ({navigation}: any) => {
 
       setIsLoading(false);
     } catch (error: any) {
+      const message =
+        error?.response?.data?.message ||
+        'Something went wrong. Please try again.';
       console.log(error);
-      showToastMessage({type: 'error', text1: error.message});
+      showToastMessage({type: 'error', text1: message});
       setIsLoading(false);
     } finally {
       setIsLoading(false);
@@ -184,8 +187,10 @@ const LoginScreen = ({navigation}: any) => {
               value={isRemember}
               onChange={() => setIsRemember(!isRemember)}
             />
+            <SpaceComponent width={4} />
             <TextComponent text="Remember Me" />
           </RowComponent>
+
           <ButtonComponent
             text="Forgot Password?"
             type="text"

@@ -1,3 +1,4 @@
+import toastConfig from './toastConfig';
 import showToastMessage from './toastMessage';
 
-export {showToastMessage};
+export {showToastMessage, toastConfig};

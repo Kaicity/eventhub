@@ -29,8 +29,6 @@ const AppRouter = () => {
     res && dispatch(addAuth(JSON.parse(res)));
   };
 
-  console.log(auth.data?.accesstoken);
-
   return (
     <>
       {isShowSplash ? (
