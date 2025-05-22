@@ -76,7 +76,7 @@ const ForgotPasswordScreen = ({navigation}: any) => {
   return (
     <ContainerComponent isImageBackground back>
       <SectionComponent>
-        <TextComponent text="Resset Password" title />
+        <TextComponent text="Reset Password" title />
         <SpaceComponent height={10} />
         <TextComponent
           text="Please enter your email address to request a password reset"

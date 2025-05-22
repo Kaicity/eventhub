@@ -102,11 +102,11 @@ const LoginScreen = ({navigation}: any) => {
 
       setIsLoading(false);
     } catch (error: any) {
-      const message =
-        error?.response?.data?.message ||
-        'Something went wrong. Please try again.';
       console.log(error);
-      showToastMessage({type: 'error', text1: message});
+      showToastMessage({
+        type: 'error',
+        text1: error?.response?.data?.message || 'Server Error!',
+      });
       setIsLoading(false);
     } finally {
       setIsLoading(false);
