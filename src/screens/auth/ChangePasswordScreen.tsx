@@ -109,17 +109,20 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
   };
 
   const handleVerification = async () => {
+    setIsLoading(true);
     if (limit > 0) {
       if (newCode !== currentCode) {
         showToastMessage({
           type: 'error',
           text1: 'Invalid verification code, please try again',
         });
+        setIsLoading(false);
       } else {
+        setIsLoading(false);
         setStep(1);
       }
     } else {
-      setStep(0);
+      setIsLoading(false);
       showToastMessage({
         type: 'error',
         text1: 'Verification code expired, please resend!',
@@ -161,9 +164,13 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
 
       setIsLoading(false);
       navigation.navigate('LoginScreen');
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
       console.log(`Can not change password error, ${error}`);
+      showToastMessage({
+        type: 'success',
+        text1: error?.response?.data?.message || 'Server Error!',
+      });
     } finally {
       setIsLoading(false);
     }
