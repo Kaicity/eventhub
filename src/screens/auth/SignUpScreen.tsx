@@ -17,6 +17,7 @@ import {appColors} from '../../constants/appColors';
 import {LoadingModal} from '../../modals';
 import RegisterSchema from '../../schemas/registerSchema';
 import SocialLoginComponent from './components/SocialLoginComponent';
+import {showToastMessage} from '../../libs';
 
 const SignUpScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,9 +45,13 @@ const SignUpScreen = ({navigation}: any) => {
         code: res.data.data.code,
         ...submitData,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
       setIsLoading(false);
+      console.log(`Can not register account errors, ${error}`);
+      showToastMessage({
+        type: 'error',
+        text1: error?.response?.data?.message || 'Network Errors!',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -164,11 +169,9 @@ const SignUpScreen = ({navigation}: any) => {
             />
           )}
         />
+
+        {renderValidationError()}
       </SectionComponent>
-
-      <SectionComponent>{renderValidationError()}</SectionComponent>
-
-      <SpaceComponent height={16} />
 
       <SectionComponent>
         <ButtonComponent
@@ -192,6 +195,7 @@ const SignUpScreen = ({navigation}: any) => {
           />
         </RowComponent>
       </SectionComponent>
+
       <LoadingModal visible={isLoading} />
     </ContainerComponent>
   );

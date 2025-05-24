@@ -99,15 +99,13 @@ const LoginScreen = ({navigation}: any) => {
       } else {
         await AsyncStorage.removeItem(REMEMBER_KEY);
       }
-
-      setIsLoading(false);
     } catch (error: any) {
+      setIsLoading(false);
       console.log(error);
       showToastMessage({
         type: 'error',
-        text1: error?.response?.data?.message || 'Server Error!',
+        text1: error?.response?.data?.message || 'Network Errors!',
       });
-      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }

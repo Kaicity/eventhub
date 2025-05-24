@@ -169,7 +169,7 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
       console.log(`Can not change password error, ${error}`);
       showToastMessage({
         type: 'success',
-        text1: error?.response?.data?.message || 'Server Error!',
+        text1: error || 'Network Errors!',
       });
     } finally {
       setIsLoading(false);
