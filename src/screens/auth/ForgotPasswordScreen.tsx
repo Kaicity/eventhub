@@ -16,6 +16,7 @@ import * as Yup from 'yup';
 import authenticationAPI from '../../apis/authApi';
 import {LoadingModal} from '../../modals';
 import {Alert} from 'react-native';
+import {showToastMessage} from '../../libs';
 
 const ForgotPasswordScreen = ({navigation}: any) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -66,8 +67,10 @@ const ForgotPasswordScreen = ({navigation}: any) => {
       });
 
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
+      setIsLoading(false);
       console.log(`Can not create new password api forgot password, ${error}`);
+      showToastMessage({type: 'error', text1: error || 'Network errors!'});
     } finally {
       setIsLoading(false);
     }
