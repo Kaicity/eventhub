@@ -7,25 +7,47 @@ import {
 import {appColors} from '../../../constants/appColors';
 import {fontFamilies} from '../../../constants/fontFamilies';
 import {Facebook, Google} from '../../../assets/svg';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {appInfo} from '../../../constants/appInfos';
+import {LoginButton, Settings} from 'react-native-fbsdk-next';
 
 GoogleSignin.configure({
-  webClientId:
-    '946530783857-0bmrvh1gjrufhl0ci4vlrqqq2dhv3pib.apps.googleusercontent.com',
+  webClientId: appInfo.WEB_CLIENT_ID,
+  scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+  forceCodeForRefreshToken: false,
+  iosClientId: appInfo.IOS_CLIENT_ID,
 });
 
+Settings.setAppID('1635060480335963');
+
 const SocialLoginComponent = () => {
-  const loginWithGoogle = async () => {
-    await GoogleSignin.hasPlayServices({
-      showPlayServicesUpdateDialog: true,
-    });
+  const signInWithGoogle = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-    } catch (error) {
-      console.log(error);
+      const response = await GoogleSignin.signIn();
+      if (response) {
+        console.log({userInfo: response.data});
+      } else {
+        // sign in was cancelled by user
+      }
+    } catch (error: any) {
+      if (error) {
+        switch (error.code) {
+          case statusCodes.IN_PROGRESS:
+            // operation (eg. sign in) already in progress
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            // Android only, play services not available or outdated
+            break;
+          default:
+          // some other error happened
+        }
+      } else {
+        // an error that's not related to google sign in occurred
+      }
     }
   };
 
@@ -38,6 +60,7 @@ const SocialLoginComponent = () => {
         font={fontFamilies.medium}
         styles={{textAlign: 'center'}}
       />
+
       <ButtonComponent
         text="Login with Google"
         type="primary"
@@ -46,7 +69,7 @@ const SocialLoginComponent = () => {
         textFont={fontFamilies.medium}
         iconFlex="left"
         icon={<Google />}
-        onpress={loginWithGoogle}
+        onpress={() => signInWithGoogle()}
       />
 
       <ButtonComponent
