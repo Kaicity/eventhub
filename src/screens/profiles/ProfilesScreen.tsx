@@ -4,7 +4,7 @@ import React from 'react';
 const ProfilesScreen = () => {
   return (
     <View>
-      <Text>profilesScreen</Text>
+      <Text>ProfilesScreen</Text>
     </View>
   );
 };

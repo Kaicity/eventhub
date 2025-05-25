@@ -7,7 +7,7 @@ import VerificationScreen from './auth/VerificationScreen';
 import EventsScreen from './events/EventsScreen';
 import HomeScreen from './home/HomeScreen';
 import MapScreen from './maps/MapScreen';
-import ProfilesScreen from './profiles/profilesScreen';
+import ProfilesScreen from './profiles/ProfilesScreen';
 import SplashScreen from './SplashScreen';
 
 export {
