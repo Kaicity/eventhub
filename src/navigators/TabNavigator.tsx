@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AddSquare, Calendar, Home2, Location, User} from 'iconsax-react-native';
 import React, {type ReactNode} from 'react';
 import {Platform} from 'react-native';
-import {TextComponent} from '../components';
+import {CircleComponent, TextComponent} from '../components';
 import {appColors} from '../constants/appColors';
 import {AddNewScreen} from '../screens';
 import EventNavigator from './EventNavigator';
@@ -23,6 +23,7 @@ const TabNavigator = () => {
           height: Platform.OS === 'ios' ? 88 : 68,
           justifyContent: 'center',
           alignItems: 'center',
+          backgroundColor: appColors.white,
         },
         tabBarIcon: ({focused, color, size}) => {
           let icon: ReactNode;
@@ -47,21 +48,11 @@ const TabNavigator = () => {
 
             case 'Add':
               icon = (
-                <View
-                  style={[
-                    globalStyle.shadow,
-                    {
-                      width: 52,
-                      height: 52,
-                      borderRadius: 100,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: appColors.primary,
-                      marginTop: Platform.OS === 'ios' ? -50 : -60,
-                    },
-                  ]}>
+                <CircleComponent
+                  size={52}
+                  styles={{marginTop: Platform.OS === 'ios' ? -50 : -60}}>
                   <AddSquare size={24} color={appColors.white} variant="Bold" />
-                </View>
+                </CircleComponent>
               );
               break;
           }
