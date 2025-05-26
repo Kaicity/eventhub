@@ -31,6 +31,7 @@ const ContainerComponent = (props: Props) => {
       <View style={{flex: 1, paddingTop: 30}}>
         {(title || back) && (
           <RowComponent
+            justify="flex-start"
             styles={{
               paddingHorizontal: 16,
               paddingVertical: 10,

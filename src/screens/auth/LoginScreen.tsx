@@ -48,6 +48,7 @@ const LoginScreen = ({navigation}: any) => {
         // ignore
       }
     };
+
     loadRemembered();
   }, []);
 
@@ -79,6 +80,8 @@ const LoginScreen = ({navigation}: any) => {
         submitData,
         'post',
       );
+
+      console.log(res.data);
 
       // set gia tri auth cho store
       isDispatch(addAuth(res.data));
