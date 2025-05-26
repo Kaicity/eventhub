@@ -16,7 +16,7 @@ import {globalStyle} from '../../styles/globalStyles';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {MenuIcon} from '../../assets/svg';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}: any) => {
   const auth = useSelector(authSelector);
 
   return (
@@ -25,7 +25,7 @@ const HomeScreen = () => {
 
       <View style={[styles.barContainer]}>
         <RowComponent>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <MenuIcon width={20} height={20} />
           </TouchableOpacity>
 
