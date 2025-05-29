@@ -1,15 +1,13 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import {StatusBar} from 'react-native';
+import Toast from 'react-native-toast-message';
 import {Provider} from 'react-redux';
+import {toastConfig} from './src/libs';
 import AppRouter from './src/navigators/AppRouter';
 import store from './src/redux/store';
-import Toast from 'react-native-toast-message';
-import {toastConfig} from './src/libs';
-import Config from 'react-native-config';
 
 const App = () => {
-  console.log(Config.API_TEST);
   return (
     <>
       <Provider store={store}>

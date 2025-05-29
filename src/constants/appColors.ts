@@ -1,5 +1,6 @@
 export const appColors = {
   primary: '#5669FF',
+  primay_2: '',
   white: '#ffffff',
   white_2: '#fcfcfc',
   text: '#120D26',
@@ -11,4 +12,8 @@ export const appColors = {
   danger: '#e74c3c',
   success: '#4BB543',
   light_cyan_blue: '#02E9FE',
+  green: '#29D697',
+  red: '#F0635A',
+  orange: '#F59762',
+  blueSky: '#46CDFB',
 };

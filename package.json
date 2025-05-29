@@ -24,11 +24,8 @@
     "react": "19.0.0",
     "react-hook-form": "^7.56.3",
     "react-native": "0.79.2",
-<<<<<<< Updated upstream
     "react-native-drawer": "^2.5.1",
-=======
     "react-native-config": "^1.5.5",
->>>>>>> Stashed changes
     "react-native-fbsdk-next": "^13.4.1",
     "react-native-gesture-handler": "^2.25.0",
     "react-native-progress-steps": "^2.0.3",

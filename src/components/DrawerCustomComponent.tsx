@@ -103,13 +103,12 @@ const DrawerCustomComponent = ({navigation}: any) => {
               style={[styles.avatar]}
             />
           ) : (
-            <View style={[styles.avatar, {backgroundColor: appColors.gray_1}]}>
+            <View style={[styles.avatar, {backgroundColor: appColors.gray_3}]}>
               <TextComponent
                 text={
                   getUser.data && getUser.data.fullname
                     ? (() => {
-                        const parts = 'Nguyen Thong'.split(' ');
-                        console.log(parts);
+                        const parts = getUser.data.fullname.split(' ');
 
                         const lastName = parts[parts.length - 1];
                         console.log(lastName);
