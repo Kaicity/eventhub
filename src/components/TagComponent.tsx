@@ -8,6 +8,7 @@ import {
 import {globalStyle} from '../styles/globalStyles';
 import TextComponent from './TextComponent';
 import {appColors} from '../constants/appColors';
+import {fontFamilies} from '../constants/fontFamilies';
 
 interface Props {
   onPress?: () => void;
@@ -34,6 +35,7 @@ const TagComponent = (props: Props) => {
       {icon && icon}
       <TextComponent
         text={label}
+        font={fontFamilies.medium}
         styles={{marginLeft: icon ? 8 : 0}}
         color={textColor}
       />
