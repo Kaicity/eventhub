@@ -2,6 +2,7 @@ import {Notification, SearchNormal1, Sort} from 'iconsax-react-native';
 import React from 'react';
 import {
   Platform,
+  ScrollView,
   StatusBar,
   StyleSheet,
   TouchableOpacity,
@@ -13,7 +14,9 @@ import {
   CategoriesListComponent,
   CircleComponent,
   RowComponent,
+  SectionComponent,
   SpaceComponent,
+  TabBarComponent,
   TagComponent,
   TextComponent,
 } from '../../components';
@@ -110,14 +113,11 @@ const HomeScreen = ({navigation}: any) => {
         </View>
       </View>
 
-      <View style={[{flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
-        <TextComponent
-          text="ĐANG CHỜ ĐỢI ĐƯỢC DEV THÊM"
-          color="red"
-          font="bold"
-          size={24}
-        />
-      </View>
+      <ScrollView style={{flex: 1, marginTop: 16}}>
+        <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 20}}>
+          <TabBarComponent title="Upcoming Events" onPress={() => {}} />
+        </SectionComponent>
+      </ScrollView>
     </View>
   );
 };
