@@ -42,8 +42,8 @@ export const globalStyle = StyleSheet.create({
     alignItems: 'center',
   },
   tag: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
     borderRadius: 100,
   },
 });

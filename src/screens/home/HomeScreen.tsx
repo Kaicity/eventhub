@@ -1,4 +1,4 @@
-import {Music, Notification, SearchNormal1, Sort} from 'iconsax-react-native';
+import {Notification, SearchNormal1, Sort} from 'iconsax-react-native';
 import React from 'react';
 import {
   FlatList,
@@ -9,7 +9,13 @@ import {
   View,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {MenuIcon} from '../../assets/svg';
+import {
+  ArtIcon,
+  FoodIcon,
+  MenuIcon,
+  MusicIcon,
+  SportIcon,
+} from '../../assets/svg';
 import {
   CircleComponent,
   RowComponent,
@@ -22,31 +28,30 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import {globalStyle} from '../../styles/globalStyles';
 
 const HomeScreen = ({navigation}: any) => {
-  const size = 20;
   const color = appColors.white;
   const categorys = [
     {
       key: 'Sport',
       title: 'Sport',
-      icon: <Music size={size} color={color} />,
+      icon: <SportIcon color={color} />,
       bgColor: appColors.red,
     },
     {
       key: 'Mussic',
       title: 'Mussic',
-      icon: <Music size={size} color={color} />,
+      icon: <MusicIcon color={color} />,
       bgColor: appColors.orange,
     },
     {
       key: 'Food',
       title: 'Food',
-      icon: <Music size={size} color={color} />,
+      icon: <FoodIcon color={color} />,
       bgColor: appColors.green,
     },
     {
       key: 'Art',
       title: 'Art',
-      icon: <Music size={size} color={color} />,
+      icon: <ArtIcon color={color} />,
       bgColor: appColors.blueSky,
     },
   ];
@@ -83,7 +88,7 @@ const HomeScreen = ({navigation}: any) => {
             />
           </View>
 
-          <CircleComponent color="#5D56F3" size={36} onpress={() => {}}>
+          <CircleComponent color="#5D56F3" size={36}>
             <View>
               <Notification size={20} color={appColors.white} />
               <View style={[styles.dotNotification]}></View>
@@ -93,8 +98,10 @@ const HomeScreen = ({navigation}: any) => {
 
         <SpaceComponent height={16} />
         {/* BAR MIDDLE */}
-
-        <RowComponent onPress={() => {}}>
+        <RowComponent
+          onPress={() =>
+            navigation.navigate('SearchEvents', {isFilters: false})
+          }>
           <SearchNormal1 size={20} color={appColors.white} variant="TwoTone" />
           <View
             style={{
@@ -108,10 +115,13 @@ const HomeScreen = ({navigation}: any) => {
             flex={1}
             text="Search.."
             color={appColors.gray_4}
-            size={16}
+            size={18}
           />
 
           <TagComponent
+            onPress={() => {
+              navigation.navigate('SearchEvents', {isFilters: true});
+            }}
             label="Filters"
             textColor={appColors.white}
             bgColor="#5D56F3"
@@ -145,7 +155,14 @@ const HomeScreen = ({navigation}: any) => {
         </View>
       </View>
 
-      <View style={[{flex: 1}]}></View>
+      <View style={[{flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
+        <TextComponent
+          text="ĐANG CHỜ ĐỢI ĐƯỢC DEV THÊM"
+          color="red"
+          font="bold"
+          size={24}
+        />
+      </View>
     </View>
   );
 };
