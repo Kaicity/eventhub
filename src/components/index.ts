@@ -1,7 +1,9 @@
 import ButtonComponent from './ButtonComponent';
+import CardComponent from './CardComponent';
 import CategoriesListComponent from './CategoriesListComponent';
 import CircleComponent from './CircleComponent';
 import ContainerComponent from './ContainerComponent';
+import EventItemComponent from './EventItemComponent';
 import InputComponent from './InputComponent';
 import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
@@ -22,4 +24,6 @@ export {
   TagComponent,
   CategoriesListComponent,
   TabBarComponent,
+  EventItemComponent,
+  CardComponent,
 };

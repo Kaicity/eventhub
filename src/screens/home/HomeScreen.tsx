@@ -1,6 +1,7 @@
 import {Notification, SearchNormal1, Sort} from 'iconsax-react-native';
 import React from 'react';
 import {
+  FlatList,
   Platform,
   ScrollView,
   StatusBar,
@@ -13,6 +14,7 @@ import {MenuIcon} from '../../assets/svg';
 import {
   CategoriesListComponent,
   CircleComponent,
+  EventItemComponent,
   RowComponent,
   SectionComponent,
   SpaceComponent,
@@ -116,6 +118,18 @@ const HomeScreen = ({navigation}: any) => {
       <ScrollView style={{flex: 1, marginTop: 16}}>
         <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 20}}>
           <TabBarComponent title="Upcoming Events" onPress={() => {}} />
+
+          <FlatList
+            horizontal
+            data={Array.from({length: 5})}
+            renderItem={({item, index}) => (
+              <EventItemComponent
+                key={`event${index}`}
+                item={item}
+                type="card"
+              />
+            )}
+          />
         </SectionComponent>
       </ScrollView>
     </View>
