@@ -54,4 +54,14 @@ export const globalStyle = StyleSheet.create({
     marginVertical: 6,
     marginBottom: 16,
   },
+  miniCard: {
+    alignItems: 'center',
+    width: 45,
+    height: 45,
+    padding: 0,
+    margin: 0,
+    marginVertical: 0,
+    marginHorizontal: 0,
+    justifyContent: 'center',
+  },
 });
