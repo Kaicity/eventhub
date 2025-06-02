@@ -9,7 +9,7 @@ import {
 } from '../../components';
 import {Sms} from 'iconsax-react-native';
 import {appColors} from '../../constants/appColors';
-import {ArrowRight} from '../../assets/svg';
+import {ArrowRight, ArrowRightGray} from '../../assets/svg';
 import {Controller, useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -30,10 +30,15 @@ const ForgotPasswordScreen = ({navigation}: any) => {
   const {
     control,
     handleSubmit,
+    watch,
     formState: {errors},
   } = useForm({
     resolver: yupResolver(EmailAttributeSchema),
   });
+
+  const watchedFields = watch(['email']);
+
+  const isAllFilled = watchedFields.every(val => !!val);
 
   const renderValidationError = () => {
     const errorMessages = [errors.email?.message].filter(Boolean);
@@ -116,8 +121,9 @@ const ForgotPasswordScreen = ({navigation}: any) => {
           onpress={handleSubmit(handleResetPassword)}
           text="Send"
           type="primary"
-          icon={<ArrowRight />}
+          icon={isAllFilled ? <ArrowRight /> : <ArrowRightGray />}
           iconFlex="right"
+          disable={!isAllFilled}
         />
       </SectionComponent>
 

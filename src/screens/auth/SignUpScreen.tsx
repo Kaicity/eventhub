@@ -1,9 +1,9 @@
 import {yupResolver} from '@hookform/resolvers/yup';
 import {Lock, Sms, User} from 'iconsax-react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import authenticationAPI from '../../apis/authApi';
-import {ArrowRight} from '../../assets/svg';
+import {ArrowRight, ArrowRightGray} from '../../assets/svg';
 import {
   ButtonComponent,
   ContainerComponent,
@@ -26,9 +26,19 @@ const SignUpScreen = ({navigation}: any) => {
     control,
     handleSubmit,
     formState: {errors},
+    watch,
   } = useForm({
     resolver: yupResolver(RegisterSchema),
   });
+
+  const watchedFields = watch([
+    'fullname',
+    'email',
+    'password',
+    'confirmPassword',
+  ]);
+
+  const isAllFilled = watchedFields.every(val => !!val);
 
   const handleRegister = async (data: any) => {
     //Không gửi confirm password chỉ để xác thực với password
@@ -177,9 +187,10 @@ const SignUpScreen = ({navigation}: any) => {
         <ButtonComponent
           text="SIGN UP"
           type="primary"
-          icon={<ArrowRight />}
+          icon={isAllFilled ? <ArrowRight /> : <ArrowRightGray />}
           iconFlex="right"
           onpress={handleSubmit(handleRegister)}
+          disable={!isAllFilled}
         />
       </SectionComponent>
 
