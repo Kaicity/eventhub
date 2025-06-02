@@ -149,42 +149,52 @@ const HomeScreen = ({navigation}: any) => {
               />
             )}
           />
-        </SectionComponent>
 
-        <SectionComponent>
-          <CardPromotionComponent bgColor="#00F8FF38">
-            <RowComponent justify="center">
-              <RowComponent
-                justify="flex-start"
-                styles={{
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}>
-                <TextComponent text="Invite your friends" title size={18} />
-                <SpaceComponent height={5} />
-                <TextComponent text="Get $20 for ticket" />
-                <SpaceComponent height={10} />
-                <TouchableOpacity style={styles.btnPromo}>
-                  <TextComponent
-                    size={14}
-                    text="INVITE"
-                    color={appColors.white}
-                    font={fontFamilies.medium}
-                  />
-                </TouchableOpacity>
+          <View style={styles.promoContainer}>
+            <CardPromotionComponent bgColor="#00F8FF38">
+              <RowComponent justify="center">
+                <RowComponent
+                  styles={{
+                    flexDirection: 'column',
+                    alignItems: 'flex-start',
+                  }}>
+                  <TextComponent text="Invite your friends" title size={18} />
+                  <SpaceComponent height={5} />
+                  <TextComponent text="Get $20 for ticket" />
+                  <SpaceComponent height={10} />
+                  <TouchableOpacity style={styles.btnPromo}>
+                    <TextComponent
+                      size={14}
+                      text="INVITE"
+                      color={appColors.white}
+                      font={fontFamilies.medium}
+                    />
+                  </TouchableOpacity>
+                </RowComponent>
+
+                <Image
+                  resizeMode="cover"
+                  source={require('../../assets/images/banner-card-promo.png')}
+                  style={{width: 180, height: 125}}
+                />
               </RowComponent>
+            </CardPromotionComponent>
+          </View>
 
-              <Image
-                resizeMode="cover"
-                source={require('../../assets/images/banner-card-promo.png')}
-                style={styles.imagePromo}
+          <SpaceComponent height={18} />
+          <TabBarComponent title="Upcoming Events" onPress={() => {}} />
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={Array.from({length: 5})}
+            renderItem={({item, index}) => (
+              <EventItemComponent
+                key={`event${index}`}
+                item={eventItems}
+                type="card"
               />
-            </RowComponent>
-          </CardPromotionComponent>
-        </SectionComponent>
-
-        <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 20}}>
-          <TabBarComponent title="Nearby You" onPress={() => {}} />
+            )}
+          />
         </SectionComponent>
       </ScrollView>
     </View>
@@ -218,9 +228,9 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
 
-  imagePromo: {
-    width: 180,
-    height: 125,
+  promoContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
 
   btnPromo: {

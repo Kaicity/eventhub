@@ -1,19 +1,25 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View, type StyleProp, type ViewStyle} from 'react-native';
 import {appColors} from '../constants/appColors';
 
 interface Props {
   children: ReactNode;
   bgColor?: string;
+  styles?: StyleProp<ViewStyle>;
 }
 
 const CardPromotionComponent = (props: Props) => {
-  const {children, bgColor} = props;
+  const {children, bgColor, styles} = props;
   return (
     <View
       style={[
-        styles.container,
-        {backgroundColor: bgColor ? bgColor : appColors.primary},
+        {
+          width: '100%',
+          height: 127,
+          borderRadius: 8,
+          backgroundColor: bgColor ? bgColor : appColors.primary,
+        },
+        styles,
       ]}>
       {children}
     </View>
@@ -21,11 +27,3 @@ const CardPromotionComponent = (props: Props) => {
 };
 
 export default CardPromotionComponent;
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: 127,
-    borderRadius: 8,
-  },
-});
