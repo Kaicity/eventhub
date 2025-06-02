@@ -1,5 +1,7 @@
+import AvatarGroupComponent from './AvatarGroupComponent';
 import ButtonComponent from './ButtonComponent';
 import CardComponent from './CardComponent';
+import CardPromotionComponent from './CardPromotionComponent';
 import CategoriesListComponent from './CategoriesListComponent';
 import CircleComponent from './CircleComponent';
 import ContainerComponent from './ContainerComponent';
@@ -26,4 +28,6 @@ export {
   TabBarComponent,
   EventItemComponent,
   CardComponent,
+  AvatarGroupComponent,
+  CardPromotionComponent,
 };

@@ -12,6 +12,7 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {MenuIcon} from '../../assets/svg';
 import {
+  CardPromotionComponent,
   CategoriesListComponent,
   CircleComponent,
   EventItemComponent,
@@ -25,8 +26,25 @@ import {
 import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {globalStyle} from '../../styles/globalStyles';
+import {Image} from 'react-native';
 
 const HomeScreen = ({navigation}: any) => {
+  const eventItems = {
+    title: 'International Band Music Concert',
+    description:
+      'Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase. Read More...',
+    location: {
+      title: 'Picnic Summer 2025',
+      address: 'QL1A Phan Thiet City',
+    },
+    imageUrl: '../assets/images/banner-card.png',
+    users: [''],
+    author: 'Hoang David',
+    startAt: Date.now(),
+    endAt: Date.now(),
+    date: Date.now(),
+  };
+
   return (
     <View style={[globalStyle.container]}>
       <StatusBar barStyle="light-content" />
@@ -108,28 +126,65 @@ const HomeScreen = ({navigation}: any) => {
             />
           </RowComponent>
         </View>
-
         <SpaceComponent height={20} />
         <View>
           <CategoriesListComponent isFill />
         </View>
       </View>
 
-      <ScrollView style={{flex: 1, marginTop: 16}}>
+      <ScrollView
+        style={{flex: 1, marginTop: 16}}
+        showsVerticalScrollIndicator={false}>
         <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 20}}>
           <TabBarComponent title="Upcoming Events" onPress={() => {}} />
-
           <FlatList
+            showsHorizontalScrollIndicator={false}
             horizontal
             data={Array.from({length: 5})}
             renderItem={({item, index}) => (
               <EventItemComponent
                 key={`event${index}`}
-                item={item}
+                item={eventItems}
                 type="card"
               />
             )}
           />
+        </SectionComponent>
+
+        <SectionComponent>
+          <CardPromotionComponent bgColor="#00F8FF38">
+            <RowComponent justify="center">
+              <RowComponent
+                justify="flex-start"
+                styles={{
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                }}>
+                <TextComponent text="Invite your friends" title size={18} />
+                <SpaceComponent height={5} />
+                <TextComponent text="Get $20 for ticket" />
+                <SpaceComponent height={10} />
+                <TouchableOpacity style={styles.btnPromo}>
+                  <TextComponent
+                    size={14}
+                    text="INVITE"
+                    color={appColors.white}
+                    font={fontFamilies.medium}
+                  />
+                </TouchableOpacity>
+              </RowComponent>
+
+              <Image
+                resizeMode="cover"
+                source={require('../../assets/images/banner-card-promo.png')}
+                style={styles.imagePromo}
+              />
+            </RowComponent>
+          </CardPromotionComponent>
+        </SectionComponent>
+
+        <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 20}}>
+          <TabBarComponent title="Nearby You" onPress={() => {}} />
         </SectionComponent>
       </ScrollView>
     </View>
@@ -161,5 +216,17 @@ const styles = StyleSheet.create({
 
   listCategoryContainer: {
     marginBottom: 2,
+  },
+
+  imagePromo: {
+    width: 180,
+    height: 125,
+  },
+
+  btnPromo: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: appColors.light_cyan_blue,
+    borderRadius: 8,
   },
 });
