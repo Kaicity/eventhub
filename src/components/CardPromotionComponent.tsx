@@ -16,7 +16,7 @@ const CardPromotionComponent = (props: Props) => {
         {
           width: '100%',
           height: 127,
-          borderRadius: 8,
+          borderRadius: 12,
           backgroundColor: bgColor ? bgColor : appColors.primary,
         },
         styles,

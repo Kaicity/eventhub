@@ -1,15 +1,16 @@
-import {Bookmark, Location} from 'iconsax-react-native';
+import {Location} from 'iconsax-react-native';
 import React from 'react';
 import {ImageBackground} from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {appColors} from '../constants/appColors';
 import {appInfo} from '../constants/appInfos';
 import {fontFamilies} from '../constants/fontFamilies';
+import {globalStyle} from '../styles/globalStyles';
 import AvatarGroupComponent from './AvatarGroupComponent';
 import CardComponent from './CardComponent';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import {globalStyle} from '../styles/globalStyles';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   item: any;
@@ -19,10 +20,12 @@ interface Props {
 const EventItemComponent = (props: Props) => {
   const {item, type} = props;
 
+  const navigation: any = useNavigation();
+
   return (
     <CardComponent
       isShadow
-      onPress={() => {}}
+      onPress={() => navigation.navigate('EventDetailScreen', {item})}
       styles={{width: appInfo.sizes.WIDTH * 0.7}}>
       <ImageBackground
         style={{flex: 1, marginBottom: 12, height: 131, padding: 10}}

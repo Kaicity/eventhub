@@ -109,10 +109,7 @@ const DrawerCustomComponent = ({navigation}: any) => {
                   getUser.data && getUser.data.fullname
                     ? (() => {
                         const parts = getUser.data.fullname.split(' ');
-
                         const lastName = parts[parts.length - 1];
-                        console.log(lastName);
-
                         return lastName.substring(0, 1).toUpperCase();
                       })()
                     : ''
