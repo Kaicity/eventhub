@@ -48,7 +48,7 @@ const ContainerComponent = (props: Props) => {
             {title && (
               <TextComponent
                 text={title}
-                size={16}
+                size={20}
                 font={fontFamilies.medium}
               />
             )}

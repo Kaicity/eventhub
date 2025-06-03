@@ -43,6 +43,9 @@ const LoginScreen = ({navigation}: any) => {
           const {email, password} = JSON.parse(creds);
           setInitialEmail(email);
           setInitialPassword(password);
+          setIsRemember(true);
+        } else {
+          setIsRemember(false);
         }
       } catch (e) {
         // ignore
@@ -81,8 +84,6 @@ const LoginScreen = ({navigation}: any) => {
         'post',
       );
 
-      console.log(res.data);
-
       // set gia tri auth cho store
       isDispatch(addAuth(res.data));
 
@@ -102,6 +103,7 @@ const LoginScreen = ({navigation}: any) => {
       } else {
         await AsyncStorage.removeItem(REMEMBER_KEY);
       }
+      setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
       console.log(error);
