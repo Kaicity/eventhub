@@ -1,23 +1,4 @@
-import React from 'react';
-import {
-  FlatList,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {fontFamilies} from '../constants/fontFamilies';
-import {globalStyle} from '../styles/globalStyles';
-import RowComponent from './RowComponent';
-import TextComponent from './TextComponent';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import SpaceComponent from './SpaceComponent';
-import {useDispatch, useSelector} from 'react-redux';
-import {authSelector, removeAuth} from '../redux/reducers/authReducers';
-import {Image} from 'react-native';
-import {appColors} from '../constants/appColors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Bookmark2,
   Calendar,
@@ -28,7 +9,25 @@ import {
   Sms,
   User,
 } from 'iconsax-react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
+import {
+  FlatList,
+  Image,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useDispatch, useSelector} from 'react-redux';
+import {appColors} from '../constants/appColors';
+import {fontFamilies} from '../constants/fontFamilies';
+import {authSelector, removeAuth} from '../redux/reducers/authReducers';
+import {globalStyle} from '../styles/globalStyles';
+import RowComponent from './RowComponent';
+import SpaceComponent from './SpaceComponent';
+import TextComponent from './TextComponent';
 
 const DrawerCustomComponent = ({navigation}: any) => {
   const getUser = useSelector(authSelector);

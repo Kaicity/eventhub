@@ -1,5 +1,4 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {appColors} from '../constants/appColors';
 import {fontFamilies} from '../constants/fontFamilies';
@@ -8,7 +7,7 @@ import TextComponent from './TextComponent';
 
 interface Props {
   title: string;
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 const TabBarComponent = (props: Props) => {
@@ -18,16 +17,16 @@ const TabBarComponent = (props: Props) => {
       justify="space-between"
       styles={{marginBottom: 20, paddingHorizontal: 16}}>
       <TextComponent text={title} size={18} font={fontFamilies.medium} />
-      <TouchableOpacity
-        onPress={onPress}
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <TextComponent text="See All" size={13} color={appColors.gray_1} />
-        <MaterialIcons name="arrow-right" size={18} color={appColors.gray_1} />
-      </TouchableOpacity>
+      {onPress && (
+        <RowComponent onPress={onPress}>
+          <TextComponent text="See All" size={13} color={appColors.gray_1} />
+          <MaterialIcons
+            name="arrow-right"
+            size={18}
+            color={appColors.gray_1}
+          />
+        </RowComponent>
+      )}
     </RowComponent>
   );
 };

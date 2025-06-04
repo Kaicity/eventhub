@@ -6,7 +6,13 @@ import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
 import SpaceComponent from './SpaceComponent';
 
-const AvatarGroupComponent = () => {
+interface Props {
+  size?: number;
+}
+
+const AvatarGroupComponent = (props: Props) => {
+  const {size} = props;
+
   const imageUrl =
     'https://flowgames.gg/wp-content/uploads/2023/09/image-2023-09-01T124912.613.jpg';
   return (
@@ -16,8 +22,8 @@ const AvatarGroupComponent = () => {
           key={`img${index}`}
           source={{uri: imageUrl}}
           style={{
-            width: 24,
-            height: 24,
+            width: size ? size : 24,
+            height: size ? size : 24,
             borderRadius: 100,
             borderWidth: 1,
             borderColor: appColors.white,
@@ -28,7 +34,7 @@ const AvatarGroupComponent = () => {
       <SpaceComponent width={12} />
       <TextComponent
         text="+20 Going"
-        size={12}
+        size={14}
         color={appColors.primary}
         font={fontFamilies.semiBold}
       />

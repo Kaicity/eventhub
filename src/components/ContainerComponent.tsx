@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {ArrowLeft} from 'iconsax-react-native';
-import React, {Children, ReactNode} from 'react';
+import React, {ReactNode} from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -9,10 +9,10 @@ import {
   View,
 } from 'react-native';
 import {appColors} from '../constants/appColors';
+import {fontFamilies} from '../constants/fontFamilies';
 import {globalStyle} from '../styles/globalStyles';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import {fontFamilies} from '../constants/fontFamilies';
 
 interface Props {
   isImageBackground?: boolean;

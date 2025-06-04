@@ -1,8 +1,7 @@
-import {View, Text, FlatList} from 'react-native';
 import React, {type ReactNode} from 'react';
+import {FlatList, View} from 'react-native';
 import {ArtIcon, FoodIcon, MusicIcon, SportIcon} from '../assets/svg';
 import {appColors} from '../constants/appColors';
-import RowComponent from './RowComponent';
 import TagComponent from './TagComponent';
 
 interface Props {

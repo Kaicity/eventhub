@@ -27,6 +27,7 @@ import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {globalStyle} from '../../styles/globalStyles';
 import {Image} from 'react-native';
+import {appInfo} from '../../constants/appInfos';
 
 const HomeScreen = ({navigation}: any) => {
   const eventItems = {
@@ -126,8 +127,8 @@ const HomeScreen = ({navigation}: any) => {
             />
           </RowComponent>
         </View>
-        <SpaceComponent height={20} />
-        <View>
+
+        <View style={styles.listCategoryContainer}>
           <CategoriesListComponent isFill />
         </View>
       </View>
@@ -175,7 +176,7 @@ const HomeScreen = ({navigation}: any) => {
                 <Image
                   resizeMode="cover"
                   source={require('../../assets/images/banner-card-promo.png')}
-                  style={{width: 180, height: 125}}
+                  style={{width: appInfo.sizes.WIDTH * 0.38, height: 125}}
                 />
               </RowComponent>
             </CardPromotionComponent>
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderBottomRightRadius: 40,
     borderBottomLeftRadius: 40,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
+    paddingTop: 50,
   },
 
   dotNotification: {
@@ -225,7 +226,8 @@ const styles = StyleSheet.create({
   },
 
   listCategoryContainer: {
-    marginBottom: 2,
+    position: 'absolute',
+    bottom: -16,
   },
 
   promoContainer: {
