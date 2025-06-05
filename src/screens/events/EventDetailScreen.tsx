@@ -1,17 +1,18 @@
 import {ArrowLeft, Calendar, Location} from 'iconsax-react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ImageBackground,
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {ArrowRight} from '../../assets/svg';
 import {
   AvatarGroupComponent,
+  ButtonComponent,
   CardComponent,
   RowComponent,
   SectionComponent,
@@ -20,15 +21,21 @@ import {
   TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
-import {globalStyle} from '../../styles/globalStyles';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {globalStyle} from '../../styles/globalStyles';
+import useHideTabBar from '../../hooks/useHideTabBar';
 
 const EventDetailScreen = ({navigation, route}: any) => {
+  // Single screen
+  useHideTabBar();
+
+  const [showSeeMore, setShowSeeMore] = useState(2);
+
   return (
     <View style={[{flex: 1}, globalStyle.container]}>
       <ImageBackground
         source={require('../../assets/images/banner-card-detail.png')}
-        style={{flex: 1, height: 224}}
+        style={{height: 224}}
         imageStyle={{padding: 6, resizeMode: 'cover'}}>
         <LinearGradient colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0)']}>
           <RowComponent
@@ -65,15 +72,16 @@ const EventDetailScreen = ({navigation, route}: any) => {
               />
             </CardComponent>
           </RowComponent>
-        </LinearGradient>
 
-        <ScrollView
-          style={{
-            flex: 1,
-            paddingTop: 244 - 106,
-          }}>
-          <SectionComponent styles={{paddingHorizontal: 28}}>
-            <View style={[{marginTop: -42}]}>
+          <View
+            style={{
+              position: 'absolute',
+              bottom: -180,
+              left: 0,
+              right: 0,
+              zIndex: 1,
+            }}>
+            <SectionComponent styles={{paddingHorizontal: 28}}>
               <RowComponent
                 justify="space-between"
                 styles={[
@@ -87,14 +95,10 @@ const EventDetailScreen = ({navigation, route}: any) => {
                 <AvatarGroupComponent size={36} />
 
                 <TouchableOpacity
-                  style={{
-                    backgroundColor: appColors.primary,
-                    borderRadius: 10,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingVertical: 8,
-                    paddingHorizontal: 26,
-                  }}>
+                  style={[
+                    globalStyle.button,
+                    {backgroundColor: appColors.primary, paddingVertical: 8},
+                  ]}>
                   <TextComponent
                     text="Invite"
                     color={appColors.white}
@@ -102,19 +106,28 @@ const EventDetailScreen = ({navigation, route}: any) => {
                   />
                 </TouchableOpacity>
               </RowComponent>
-            </View>
-          </SectionComponent>
+            </SectionComponent>
+          </View>
+        </LinearGradient>
+      </ImageBackground>
 
-          <SectionComponent>
-            <TextComponent
-              text="International Band Music Concert"
-              size={34}
-              font={fontFamilies.medium}
-            />
-          </SectionComponent>
+      <SpaceComponent height={50} />
 
+      {/* AREA SCROLL */}
+      <View style={{flex: 1}}>
+        <SectionComponent>
+          <TextComponent
+            text="International Band Music Concert"
+            size={34}
+            font={fontFamilies.medium}
+          />
+        </SectionComponent>
+
+        <ScrollView
+          style={{marginBottom: showSeeMore > 0 ? 0 : 100}}
+          showsVerticalScrollIndicator={false}>
           <SectionComponent>
-            <RowComponent justify="flex-start">
+            <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
               <CardComponent
                 styles={globalStyle.miniCard}
                 onPress={() => {}}
@@ -141,10 +154,8 @@ const EventDetailScreen = ({navigation, route}: any) => {
                 />
               </RowComponent>
             </RowComponent>
-          </SectionComponent>
 
-          <SectionComponent>
-            <RowComponent justify="flex-start">
+            <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
               <CardComponent
                 styles={globalStyle.miniCard}
                 onPress={() => {}}
@@ -171,10 +182,8 @@ const EventDetailScreen = ({navigation, route}: any) => {
                 />
               </RowComponent>
             </RowComponent>
-          </SectionComponent>
 
-          <SectionComponent>
-            <RowComponent justify="flex-start">
+            <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
               <CardComponent
                 styles={globalStyle.miniCard}
                 onPress={() => {}}
@@ -206,14 +215,40 @@ const EventDetailScreen = ({navigation, route}: any) => {
 
           <TabBarComponent title="About event" />
           <SectionComponent>
-            <TextComponent text="Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase. Read More..." />
+            <TextComponent
+              numberOfLine={showSeeMore}
+              text="Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase. Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase. Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase."
+            />
+            <ButtonComponent
+              text={showSeeMore === 0 ? 'Unless..' : 'See more..'}
+              type="link"
+              onpress={() => {
+                showSeeMore === 0 ? setShowSeeMore(2) : setShowSeeMore(0);
+              }}
+            />
           </SectionComponent>
         </ScrollView>
-      </ImageBackground>
+      </View>
+
+      <LinearGradient
+        colors={['rgba(255, 255, 255, 0.6)', 'rgba(255, 255, 255, 1)']}
+        style={{
+          position: 'absolute',
+          bottom: -10,
+          right: 0,
+          left: 0,
+          padding: 12,
+        }}>
+        <ButtonComponent
+          text="BUY TICKET $120"
+          type="primary"
+          onpress={() => {}}
+          icon={<ArrowRight />}
+          iconFlex="right"
+        />
+      </LinearGradient>
     </View>
   );
 };
 
 export default EventDetailScreen;
-
-const styles = StyleSheet.create({});
