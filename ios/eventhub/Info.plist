@@ -32,6 +32,9 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Tìm sự kiện đang diễn ra gần bạn</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+	<string>Tìm sự kiện đang diễn ra gần bạn</string>
 	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

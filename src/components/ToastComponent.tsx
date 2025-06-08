@@ -1,8 +1,7 @@
-import {View, Text, StyleSheet} from 'react-native';
-import React from 'react';
-import {appColors} from '../constants/appColors';
-import {fontFamilies} from '../constants/fontFamilies';
 import {Danger, TickCircle, Warning2} from 'iconsax-react-native';
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {fontFamilies} from '../constants/fontFamilies';
 
 const iconMap: Record<
   string,

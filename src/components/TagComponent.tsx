@@ -1,14 +1,9 @@
 import React, {type ReactNode} from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
-import {globalStyle} from '../styles/globalStyles';
-import TextComponent from './TextComponent';
+import {TouchableOpacity, type StyleProp, type ViewStyle} from 'react-native';
 import {appColors} from '../constants/appColors';
 import {fontFamilies} from '../constants/fontFamilies';
+import {globalStyle} from '../styles/globalStyles';
+import TextComponent from './TextComponent';
 
 interface Props {
   onPress?: () => void;

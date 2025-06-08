@@ -1,8 +1,10 @@
+import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
 import {Notification, SearchNormal1, Sort} from 'iconsax-react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
-  Platform,
+  ImageBackground,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -10,9 +12,9 @@ import {
   View,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useDispatch, useSelector} from 'react-redux';
 import {MenuIcon} from '../../assets/svg';
 import {
-  CardPromotionComponent,
   CategoriesListComponent,
   CircleComponent,
   EventItemComponent,
@@ -25,10 +27,39 @@ import {
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
+import {authSelector} from '../../redux/reducers/authReducers';
 import {globalStyle} from '../../styles/globalStyles';
-import {Image} from 'react-native';
+import type {AddressModel} from '../../models/address-model';
 
 const HomeScreen = ({navigation}: any) => {
+  const [currenLocation, setCurrentLocation] = useState<AddressModel>();
+
+  const dispatch = useDispatch();
+
+  const auth = useSelector(authSelector);
+
+  useEffect(() => {
+    Geolocation.getCurrentPosition(position => {
+      if (position.coords) {
+        reverseGeoCode({
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
+        });
+      }
+    });
+  }, []);
+
+  const reverseGeoCode = async ({lat, long}: {lat: number; long: number}) => {
+    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=oiJF4fKlzuOGMijKSRRw9DE54-6S-p0UZFUbyQt21Ts`;
+    try {
+      const res: any = await axios(api);
+      if (res.items.length > 0) {
+        const item = res.items[0];
+        setCurrentLocation(item);
+      }
+    } catch (error) {}
+  };
+
   const eventItems = {
     title: 'International Band Music Concert',
     description:
@@ -69,12 +100,15 @@ const HomeScreen = ({navigation}: any) => {
                   color={appColors.white}
                 />
               </RowComponent>
-              <TextComponent
-                text="California, USA"
-                color={appColors.white}
-                font={fontFamilies.medium}
-                size={13}
-              />
+
+              {currenLocation && (
+                <TextComponent
+                  text={`${currenLocation.address.city}, ${currenLocation.address.countryName}`}
+                  color={appColors.white}
+                  font={fontFamilies.medium}
+                  size={13}
+                />
+              )}
             </View>
 
             <CircleComponent color="#5D56F3" size={36}>
@@ -126,8 +160,8 @@ const HomeScreen = ({navigation}: any) => {
             />
           </RowComponent>
         </View>
-        <SpaceComponent height={20} />
-        <View>
+
+        <View style={styles.listCategoryContainer}>
           <CategoriesListComponent isFill />
         </View>
       </View>
@@ -151,37 +185,38 @@ const HomeScreen = ({navigation}: any) => {
           />
 
           <View style={styles.promoContainer}>
-            <CardPromotionComponent bgColor="#00F8FF38">
-              <RowComponent justify="center">
-                <RowComponent
-                  styles={{
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                  }}>
-                  <TextComponent text="Invite your friends" title size={18} />
-                  <SpaceComponent height={5} />
-                  <TextComponent text="Get $20 for ticket" />
-                  <SpaceComponent height={10} />
-                  <TouchableOpacity style={styles.btnPromo}>
-                    <TextComponent
-                      size={14}
-                      text="INVITE"
-                      color={appColors.white}
-                      font={fontFamilies.medium}
-                    />
-                  </TouchableOpacity>
-                </RowComponent>
-
-                <Image
-                  resizeMode="cover"
-                  source={require('../../assets/images/banner-card-promo.png')}
-                  style={{width: 180, height: 125}}
-                />
+            <ImageBackground
+              source={require('../../assets/images/banner-card-promotion.png')}
+              style={{height: 127}}
+              imageStyle={{
+                resizeMode: 'cover',
+                borderRadius: 12,
+              }}>
+              <RowComponent
+                styles={{
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  paddingHorizontal: 18,
+                  paddingVertical: 20,
+                }}>
+                <TextComponent text="Invite your friends" title size={18} />
+                <SpaceComponent height={5} />
+                <TextComponent text="Get $20 for ticket" />
+                <SpaceComponent height={10} />
+                <TouchableOpacity style={styles.btnPromo}>
+                  <TextComponent
+                    size={14}
+                    text="INVITE"
+                    color={appColors.white}
+                    font={fontFamilies.medium}
+                  />
+                </TouchableOpacity>
               </RowComponent>
-            </CardPromotionComponent>
+            </ImageBackground>
           </View>
 
           <SpaceComponent height={18} />
+
           <TabBarComponent title="Upcoming Events" onPress={() => {}} />
           <FlatList
             showsHorizontalScrollIndicator={false}
@@ -209,7 +244,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderBottomRightRadius: 40,
     borderBottomLeftRadius: 40,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
+    paddingTop: 50,
   },
 
   dotNotification: {
@@ -225,7 +260,8 @@ const styles = StyleSheet.create({
   },
 
   listCategoryContainer: {
-    marginBottom: 2,
+    position: 'absolute',
+    bottom: -16,
   },
 
   promoContainer: {
