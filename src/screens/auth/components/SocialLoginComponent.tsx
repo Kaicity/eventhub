@@ -1,18 +1,18 @@
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import React from 'react';
+import {Settings} from 'react-native-fbsdk-next';
+import {Facebook, Google} from '../../../assets/svg';
 import {
   ButtonComponent,
   SectionComponent,
   TextComponent,
 } from '../../../components';
 import {appColors} from '../../../constants/appColors';
-import {fontFamilies} from '../../../constants/fontFamilies';
-import {Facebook, Google} from '../../../assets/svg';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
 import {appInfo} from '../../../constants/appInfos';
-import {LoginButton, Settings} from 'react-native-fbsdk-next';
+import {fontFamilies} from '../../../constants/fontFamilies';
 
 GoogleSignin.configure({
   webClientId: appInfo.WEB_CLIENT_ID,
@@ -66,7 +66,7 @@ const SocialLoginComponent = () => {
         type="primary"
         color={appColors.white}
         textColor={appColors.text}
-        textFont={fontFamilies.medium}
+        textFont={fontFamilies.regular}
         iconFlex="left"
         icon={<Google />}
         onpress={() => signInWithGoogle()}
@@ -77,7 +77,7 @@ const SocialLoginComponent = () => {
         type="primary"
         color={appColors.white}
         textColor={appColors.text}
-        textFont={fontFamilies.medium}
+        textFont={fontFamilies.regular}
         iconFlex="left"
         icon={<Facebook />}
       />

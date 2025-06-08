@@ -6,7 +6,7 @@ export const appInfo = {
     HEIGHT: Dimensions.get('window').height,
   },
 
-  BASE_URL: 'http://192.168.1.13:3001',
+  BASE_URL: 'http://192.168.1.10:3001',
   WEB_CLIENT_ID:
     '841123883806-fl36gfgcioagvc3vopk6k83g6aigqt8u.apps.googleusercontent.com',
   ANDROID_CLIENT_ID:
