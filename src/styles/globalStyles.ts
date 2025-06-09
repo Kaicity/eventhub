@@ -65,4 +65,23 @@ export const globalStyle = StyleSheet.create({
     marginHorizontal: 0,
     justifyContent: 'center',
   },
+  inputContainer: {
+    flexDirection: 'row',
+    borderRadius: 12,
+    borderWidth: 1,
+    width: '100%',
+    minHeight: 56,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: appColors.white,
+    marginBottom: 19,
+  },
+  input: {
+    padding: 0,
+    margin: 0,
+    flex: 1,
+    paddingHorizontal: 14,
+  },
 });

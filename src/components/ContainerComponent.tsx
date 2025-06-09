@@ -5,6 +5,7 @@ import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -75,6 +76,7 @@ const ContainerComponent = (props: Props) => {
     </ImageBackground>
   ) : (
     <SafeAreaView style={[globalStyle.container]}>
+      <StatusBar barStyle="dark-content" />
       {headerComponent()}
     </SafeAreaView>
   );

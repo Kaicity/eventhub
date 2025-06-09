@@ -114,7 +114,9 @@ const EventDetailScreen = ({navigation, route}: any) => {
       <SpaceComponent height={50} />
 
       {/* AREA SCROLL */}
-      <View style={{flex: 1}}>
+      <ScrollView
+        style={{flex: 1, marginBottom: showSeeMore > 0 ? 0 : 100}}
+        showsVerticalScrollIndicator={false}>
         <SectionComponent>
           <TextComponent
             text="International Band Music Concert"
@@ -123,112 +125,108 @@ const EventDetailScreen = ({navigation, route}: any) => {
           />
         </SectionComponent>
 
-        <ScrollView
-          style={{marginBottom: showSeeMore > 0 ? 0 : 100}}
-          showsVerticalScrollIndicator={false}>
-          <SectionComponent>
-            <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
-              <CardComponent
-                styles={globalStyle.miniCard}
-                onPress={() => {}}
-                color="#5669FF26">
-                <Calendar size={24} color={appColors.primary} variant="Bold" />
-              </CardComponent>
+        <SectionComponent>
+          <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
+            <CardComponent
+              styles={globalStyle.miniCard}
+              onPress={() => {}}
+              color="#5669FF26">
+              <Calendar size={24} color={appColors.primary} variant="Bold" />
+            </CardComponent>
 
-              <SpaceComponent width={10} />
+            <SpaceComponent width={10} />
 
-              <RowComponent
-                styles={{
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}>
-                <TextComponent
-                  text="14 December, 2021"
-                  font={fontFamilies.medium}
-                />
-                <SpaceComponent height={10} />
-                <TextComponent
-                  text="Tuesday, 4:00PM - 9:00PM"
-                  font={fontFamilies.regular}
-                  size={12}
-                />
-              </RowComponent>
+            <RowComponent
+              styles={{
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+              }}>
+              <TextComponent
+                text="14 December, 2021"
+                font={fontFamilies.medium}
+              />
+              <SpaceComponent height={10} />
+              <TextComponent
+                text="Tuesday, 4:00PM - 9:00PM"
+                font={fontFamilies.regular}
+                size={12}
+              />
             </RowComponent>
+          </RowComponent>
 
-            <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
-              <CardComponent
-                styles={globalStyle.miniCard}
-                onPress={() => {}}
-                color="#5669FF26">
-                <Location size={24} color={appColors.primary} variant="Bold" />
-              </CardComponent>
+          <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
+            <CardComponent
+              styles={globalStyle.miniCard}
+              onPress={() => {}}
+              color="#5669FF26">
+              <Location size={24} color={appColors.primary} variant="Bold" />
+            </CardComponent>
 
-              <SpaceComponent width={10} />
+            <SpaceComponent width={10} />
 
-              <RowComponent
-                styles={{
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}>
-                <TextComponent
-                  text="Gala Convention Center"
-                  font={fontFamilies.medium}
-                />
-                <SpaceComponent height={10} />
-                <TextComponent
-                  text="36 Guild Street London, UK "
-                  font={fontFamilies.regular}
-                  size={12}
-                />
-              </RowComponent>
+            <RowComponent
+              styles={{
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+              }}>
+              <TextComponent
+                text="Gala Convention Center"
+                font={fontFamilies.medium}
+              />
+              <SpaceComponent height={10} />
+              <TextComponent
+                text="36 Guild Street London, UK "
+                font={fontFamilies.regular}
+                size={12}
+              />
             </RowComponent>
+          </RowComponent>
 
-            <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
-              <CardComponent
-                styles={globalStyle.miniCard}
-                onPress={() => {}}
-                color="#5669FF26">
-                <Image
-                  source={require('../../assets/images/author.png')}
-                  style={{width: '100%', height: '100%', borderRadius: 12}}
-                  resizeMode="cover"
-                />
-              </CardComponent>
+          <RowComponent justify="flex-start" styles={{marginBottom: 20}}>
+            <CardComponent
+              styles={globalStyle.miniCard}
+              onPress={() => {}}
+              color="#5669FF26">
+              <Image
+                source={require('../../assets/images/author.png')}
+                style={{width: '100%', height: '100%', borderRadius: 12}}
+                resizeMode="cover"
+              />
+            </CardComponent>
 
-              <SpaceComponent width={10} />
+            <SpaceComponent width={10} />
 
-              <RowComponent
-                styles={{
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                }}>
-                <TextComponent text="Thongular" font={fontFamilies.medium} />
-                <SpaceComponent height={10} />
-                <TextComponent
-                  text="Organizer"
-                  font={fontFamilies.regular}
-                  size={12}
-                />
-              </RowComponent>
+            <RowComponent
+              styles={{
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+              }}>
+              <TextComponent text="Thongular" font={fontFamilies.medium} />
+              <SpaceComponent height={10} />
+              <TextComponent
+                text="Organizer"
+                font={fontFamilies.regular}
+                size={12}
+              />
             </RowComponent>
-          </SectionComponent>
+          </RowComponent>
+        </SectionComponent>
 
-          <TabBarComponent title="About event" />
-          <SectionComponent>
-            <TextComponent
-              numberOfLine={showSeeMore}
-              text="Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase. Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase. Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase."
-            />
-            <ButtonComponent
-              text={showSeeMore === 0 ? 'Unless..' : 'See more..'}
-              type="link"
-              onpress={() => {
-                showSeeMore === 0 ? setShowSeeMore(2) : setShowSeeMore(0);
-              }}
-            />
-          </SectionComponent>
-        </ScrollView>
-      </View>
+        <TabBarComponent title="About event" />
+        <SectionComponent>
+          <TextComponent
+            numberOfLine={showSeeMore}
+            text="Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase. Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase. Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase."
+          />
+          <ButtonComponent
+            text={showSeeMore === 0 ? 'Unless..' : 'See more..'}
+            type="link"
+            onpress={() => {
+              showSeeMore === 0 ? setShowSeeMore(2) : setShowSeeMore(0);
+            }}
+          />
+        </SectionComponent>
+      </ScrollView>
 
       <LinearGradient
         colors={['rgba(255, 255, 255, 0.6)', 'rgba(255, 255, 255, 1)']}
