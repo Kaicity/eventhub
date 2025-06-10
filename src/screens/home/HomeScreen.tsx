@@ -217,16 +217,14 @@ const HomeScreen = ({navigation}: any) => {
 
           <SpaceComponent height={18} />
 
-          <TabBarComponent title="Upcoming Events" onPress={() => {}} />
+          <TabBarComponent title="Nearby you" onPress={() => {}} />
           <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={Array.from({length: 5})}
+            data={Array.from({length: 3})}
             renderItem={({item, index}) => (
               <EventItemComponent
                 key={`event${index}`}
                 item={eventItems}
-                type="card"
+                type="list"
               />
             )}
           />
