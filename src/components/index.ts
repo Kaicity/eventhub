@@ -9,6 +9,7 @@ import EventItemComponent from './EventItemComponent';
 import InputComponent from './InputComponent';
 import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
+import SelectLocationComponent from './SelectLocationComponent';
 import SpaceComponent from './SpaceComponent';
 import TabBarComponent from './TabBarComponent';
 import TagComponent from './TagComponent';
@@ -30,4 +31,5 @@ export {
   CardComponent,
   AvatarGroupComponent,
   CardPromotionComponent,
+  SelectLocationComponent,
 };

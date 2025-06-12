@@ -16,4 +16,5 @@ export const appColors = {
   red: '#F0635A',
   orange: '#F59762',
   blueSky: '#46CDFB',
+  blue: '#4285F4',
 };

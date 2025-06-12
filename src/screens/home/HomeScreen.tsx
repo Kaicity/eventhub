@@ -1,5 +1,4 @@
 import Geolocation from '@react-native-community/geolocation';
-import axios from 'axios';
 import {Notification, SearchNormal1, Sort} from 'iconsax-react-native';
 import React, {useEffect, useState} from 'react';
 import {
@@ -13,6 +12,7 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
+import mapAPI from '../../apis/mapApi';
 import {MenuIcon} from '../../assets/svg';
 import {
   CategoriesListComponent,
@@ -27,9 +27,9 @@ import {
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
+import type {AddressModel} from '../../models/address-model';
 import {authSelector} from '../../redux/reducers/authReducers';
 import {globalStyle} from '../../styles/globalStyles';
-import type {AddressModel} from '../../models/address-model';
 
 const HomeScreen = ({navigation}: any) => {
   const [currenLocation, setCurrentLocation] = useState<AddressModel>();
@@ -47,17 +47,38 @@ const HomeScreen = ({navigation}: any) => {
         });
       }
     });
+
+    // geocodeByAddress('317 Nguyễn Văn Luông Phường 12 Quận 6');
   }, []);
 
+  // const geocodeByAddress = async (address: string) => {
+  //   try {
+  //     const res = await mapAPI.HandleMaps(
+  //       'https://geocode.search.hereapi.com/v1/geocode',
+  //       {q: address},
+  //       undefined,
+  //     );
+  //     console.log(res);
+  //   } catch (error) {
+  //     console.error('Geocode error:', error);
+  //   }
+  // };
+
   const reverseGeoCode = async ({lat, long}: {lat: number; long: number}) => {
-    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=oiJF4fKlzuOGMijKSRRw9DE54-6S-p0UZFUbyQt21Ts`;
     try {
-      const res: any = await axios(api);
-      if (res.items.length > 0) {
-        const item = res.items[0];
+      const res: any = await mapAPI.HandleMaps(
+        'https://revgeocode.search.hereapi.com/v1/revgeocode',
+        {at: `${lat},${long}`},
+        undefined,
+      );
+
+      if (res.data.items.length > 0) {
+        const item = res.data.items[0];
         setCurrentLocation(item);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error('RevGeocode error:', error);
+    }
   };
 
   const eventItems = {
@@ -217,18 +238,17 @@ const HomeScreen = ({navigation}: any) => {
 
           <SpaceComponent height={18} />
 
-          <TabBarComponent title="Upcoming Events" onPress={() => {}} />
+          <TabBarComponent title="Nearby you" onPress={() => {}} />
           <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={Array.from({length: 5})}
+            data={Array.from({length: 3})}
             renderItem={({item, index}) => (
               <EventItemComponent
                 key={`event${index}`}
                 item={eventItems}
-                type="card"
+                type="list"
               />
             )}
+            scrollEnabled={false}
           />
         </SectionComponent>
       </ScrollView>
