@@ -118,7 +118,6 @@ const EventItemComponent = (props: Props) => {
             />
 
             <TextComponent
-              styles={{maxWidth: 130}}
               text={item.title}
               size={14}
               font={fontFamilies.medium}

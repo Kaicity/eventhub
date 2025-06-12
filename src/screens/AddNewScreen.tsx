@@ -45,7 +45,7 @@ const AddNewScreen = () => {
     return null;
   };
 
-  const handleAddNew = (data: any) => {
+  const handleAddNewEvent = (data: any) => {
     console.log(data);
 
     try {
@@ -60,7 +60,7 @@ const AddNewScreen = () => {
           control={control}
           render={({field: {onChange, value}}) => (
             <InputComponent
-              value={value}
+              value={value ?? ''}
               onchange={onChange}
               placeholder="Title"
               borderColor={errors.title && appColors.danger}
@@ -86,6 +86,23 @@ const AddNewScreen = () => {
           )}
         />
 
+        <Controller
+          name="locationTitle"
+          control={control}
+          render={({field: {onChange, value}}) => (
+            <InputComponent
+              value={value as string}
+              onchange={onChange}
+              placeholder="Location"
+              borderColor={errors.locationTitle && appColors.danger}
+              placeholderTextColor={errors.locationTitle && appColors.danger}
+              numberOfLine={4}
+              allowClear
+              multiLine
+            />
+          )}
+        />
+
         <SelectLocationComponent />
 
         {renderValidationError()}
@@ -95,7 +112,7 @@ const AddNewScreen = () => {
         <ButtonComponent
           text="Add New"
           type="primary"
-          onpress={handleSubmit(handleAddNew)}
+          onpress={handleSubmit(handleAddNewEvent)}
         />
       </SectionComponent>
     </ContainerComponent>
