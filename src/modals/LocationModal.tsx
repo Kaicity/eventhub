@@ -1,13 +1,11 @@
 import Geolocation from '@react-native-community/geolocation';
 import MapboxGL from '@rnmapbox/maps';
-import axios from 'axios';
 import {Pointer, SearchNormal} from 'iconsax-react-native';
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
   Modal,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -32,7 +30,13 @@ MapboxGL.setAccessToken(
 interface Props {
   visible: boolean;
   onClose: () => void;
-  onSelect: (val: string) => void;
+  onSelect: (val: {
+    address: string;
+    position?: {
+      lat: number;
+      long: number;
+    };
+  }) => void;
 }
 
 const LocationModal = (props: Props) => {
@@ -41,14 +45,14 @@ const LocationModal = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [locations, setLocations] = useState<LocationModel[]>([]);
   const [addressSelected, setAddressSelected] = useState('');
-  const [selectedCoordinate, setSelectedCoordinate] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<{
+    lat: number;
+    long: number;
+  }>();
 
   useEffect(() => {
     if (addressSelected) {
-      geocodeByAddress(addressSelected);
+      handleGeocodeByAddress(addressSelected);
     }
   }, [addressSelected]);
 
@@ -62,18 +66,18 @@ const LocationModal = (props: Props) => {
     }
   }, [searchKey]);
 
-  const handleGetCurrentLocation = () => {
+  const handleGetCurrentLocation = async () => {
     Geolocation.getCurrentPosition(position => {
       if (position.coords) {
-        setSelectedCoordinate({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+        setCurrentLocation({
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
         });
       }
     });
   };
 
-  const geocodeByAddress = async (address: string) => {
+  const handleGeocodeByAddress = async (address: string) => {
     try {
       const res = await mapAPI.HandleMaps(
         'https://geocode.search.hereapi.com/v1/geocode',
@@ -82,9 +86,9 @@ const LocationModal = (props: Props) => {
       );
 
       if (res.data.items.length > 0) {
-        setSelectedCoordinate({
-          latitude: res.data.items[0].position.lat,
-          longitude: res.data.items[0].position.lng,
+        setCurrentLocation({
+          lat: res.data.items[0].position.lat,
+          long: res.data.items[0].position.lng,
         });
       }
     } catch (error) {
@@ -93,12 +97,19 @@ const LocationModal = (props: Props) => {
   };
 
   const handleSearchLocation = async () => {
-    const api = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchKey}&limit=10&lang=vi-VI&apiKey=oiJF4fKlzuOGMijKSRRw9DE54-6S-p0UZFUbyQt21Ts`;
     try {
       setIsLoading(true);
-      const res: any = await axios.get(api);
-      if (res && res.items) {
-        setLocations(res.items);
+      const res: any = await mapAPI.HandleMaps(
+        'https://autocomplete.search.hereapi.com/v1/autocomplete',
+        {
+          q: searchKey,
+          limit: 10,
+        },
+        undefined,
+      );
+
+      if (res.data && res.data.items) {
+        setLocations(res.data.items);
       }
       setIsLoading(false);
     } catch (error) {
@@ -110,7 +121,7 @@ const LocationModal = (props: Props) => {
 
   const handleCancel = () => {
     onClose();
-    handleGetCurrentLocation();
+    // handleGetCurrentLocation();
   };
 
   return (
@@ -139,8 +150,7 @@ const LocationModal = (props: Props) => {
                 backgroundColor: appColors.white,
                 zIndex: 1,
                 padding: 20,
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
+                borderRadius: 10,
               },
               globalStyle.shadow,
             ]}>
@@ -185,23 +195,22 @@ const LocationModal = (props: Props) => {
           zoomLevel={15}
           animationMode="flyTo"
           centerCoordinate={
-            selectedCoordinate
-              ? [
-                  selectedCoordinate.longitude as number,
-                  selectedCoordinate.latitude as number,
-                ]
+            currentLocation
+              ? [currentLocation.long, currentLocation.lat]
               : undefined
           } // [lng, lat]
         />
         <MapboxGL.PointAnnotation
-          id="marker"
+          id="current-location"
           coordinate={[
-            selectedCoordinate?.longitude as number,
-            selectedCoordinate?.latitude as number,
+            currentLocation?.long as number,
+            currentLocation?.lat as number,
           ]}>
-          <View style={[styles.pointer, globalStyle.shadow]}></View>
+          <View></View>
         </MapboxGL.PointAnnotation>
       </MapboxGL.MapView>
+
+      {/* // LocationModal.tsx:123 10.76036, 106.68135 */}
 
       <ButtonComponent
         text="Submit"
@@ -211,6 +220,14 @@ const LocationModal = (props: Props) => {
           bottom: 10,
           left: appInfo.sizes.WIDTH * 0.1,
           right: 0,
+        }}
+        onpress={() => {
+          onSelect({
+            address: addressSelected,
+            position: currentLocation,
+          });
+
+          onClose();
         }}
       />
 
@@ -231,16 +248,5 @@ const LocationModal = (props: Props) => {
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  pointer: {
-    width: 22,
-    height: 22,
-    backgroundColor: appColors.blue,
-    borderWidth: 4,
-    borderColor: appColors.white,
-    borderRadius: 20,
-  },
-});
 
 export default LocationModal;

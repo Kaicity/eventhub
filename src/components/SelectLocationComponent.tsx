@@ -9,6 +9,13 @@ import LocationModal from '../modals/LocationModal';
 
 const SelectLocationComponent = () => {
   const [isVisibleModalLocation, setIsVisibleLocation] = useState(false);
+  const [addressSelected, setAddressSelected] = useState<{
+    address: string;
+    position?: {
+      lat: number;
+      long: number;
+    };
+  }>();
 
   return (
     <>
@@ -17,14 +24,18 @@ const SelectLocationComponent = () => {
         onPress={() => setIsVisibleLocation(true)}>
         <Location color={`${appColors.primary}80`} size={22} variant="Bold" />
         <SpaceComponent width={12} />
-        <TextComponent text="New York, USA" flex={1} />
+        <TextComponent
+          numberOfLine={1}
+          text={addressSelected ? addressSelected.address : 'Select location'}
+          flex={1}
+        />
         <ArrowRight2 color={appColors.primary} size={22} />
       </RowComponent>
 
       <LocationModal
         visible={isVisibleModalLocation}
         onClose={() => setIsVisibleLocation(false)}
-        onSelect={val => console.log(val)}
+        onSelect={val => setAddressSelected(val)}
       />
     </>
   );
