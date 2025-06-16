@@ -75,7 +75,7 @@ const VerificationScreen = ({navigation, route}: any) => {
       );
 
       //reset gia tri
-      setCurrentCode(res.data.data.code);
+      setCurrentCode(res.data.code);
       setLimit(120);
       setDigits(['', '', '', '']);
 
@@ -104,6 +104,8 @@ const VerificationScreen = ({navigation, route}: any) => {
             data,
             'post',
           );
+
+          console.log(res);
 
           dispatch(addAuth(res.data));
           await AsyncStorage.setItem('auth', JSON.stringify(res.data));

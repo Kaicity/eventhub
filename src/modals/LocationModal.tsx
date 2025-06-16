@@ -85,16 +85,16 @@ const LocationModal = (props: Props) => {
 
   const handleGeocodeByAddress = async (address: string) => {
     try {
-      const res = await mapAPI.HandleMaps(
+      const res: any = await mapAPI.HandleMaps(
         'https://geocode.search.hereapi.com/v1/geocode',
         {q: address},
         undefined,
       );
 
-      if (res.data.items.length > 0) {
+      if (res.items.length > 0) {
         setCurrentLocation({
-          lat: res.data.items[0].position.lat,
-          long: res.data.items[0].position.lng,
+          lat: res.items[0].position.lat,
+          long: res.items[0].position.lng,
         });
       }
     } catch (error) {
@@ -114,8 +114,8 @@ const LocationModal = (props: Props) => {
         undefined,
       );
 
-      if (res.data && res.data.items) {
-        setLocations(res.data.items);
+      if (res && res.items) {
+        setLocations(res.items);
       }
       setIsLoading(false);
     } catch (error) {

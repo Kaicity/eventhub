@@ -95,7 +95,7 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
       );
 
       //reset gia tri
-      setCurrentCode(res.data.data.code);
+      setCurrentCode(res.data.code);
       setLimit(120);
       setDigits(['', '', '', '']);
 
@@ -151,15 +151,17 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
     const {password} = data;
     setIsLoading(true);
     try {
-      const res = await authenticationAPI.HandleAuthentication(
+      const res: any = await authenticationAPI.HandleAuthentication(
         '/changePassword',
         {email: email, password},
         'post',
       );
 
+      console.log(res);
+
       showToastMessage({
         type: 'success',
-        text1: res.data.message,
+        text1: res.message,
       });
 
       setIsLoading(false);
@@ -169,7 +171,7 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
       console.log(`Can not change password error, ${error}`);
       showToastMessage({
         type: 'success',
-        text1: error || 'Network Errors!',
+        text1: error?.message || 'Network Errors!',
       });
     } finally {
       setIsLoading(false);

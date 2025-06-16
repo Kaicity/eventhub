@@ -47,22 +47,7 @@ const HomeScreen = ({navigation}: any) => {
         });
       }
     });
-
-    // geocodeByAddress('317 Nguyễn Văn Luông Phường 12 Quận 6');
   }, []);
-
-  // const geocodeByAddress = async (address: string) => {
-  //   try {
-  //     const res = await mapAPI.HandleMaps(
-  //       'https://geocode.search.hereapi.com/v1/geocode',
-  //       {q: address},
-  //       undefined,
-  //     );
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.error('Geocode error:', error);
-  //   }
-  // };
 
   const reverseGeoCode = async ({lat, long}: {lat: number; long: number}) => {
     try {
@@ -72,8 +57,8 @@ const HomeScreen = ({navigation}: any) => {
         undefined,
       );
 
-      if (res.data.items.length > 0) {
-        const item = res.data.items[0];
+      if (res.items.length > 0) {
+        const item = res.items[0];
         setCurrentLocation(item);
       }
     } catch (error) {

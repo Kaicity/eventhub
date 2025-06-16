@@ -29,7 +29,7 @@ const AddNewScreen = () => {
     resolver: yupResolver(EventSchema),
   });
 
-  setValue('author', auth?.data.id);
+  setValue('author', auth?.id);
 
   const renderValidationError = () => {
     const errorMessages = [
@@ -48,7 +48,7 @@ const AddNewScreen = () => {
     return null;
   };
 
-  const handleAddNewEvent = (data: any) => {
+  const handleAddNewEvent = async (data: any) => {
     console.log(data);
 
     try {

@@ -52,7 +52,7 @@ const SignUpScreen = ({navigation}: any) => {
       );
 
       navigation.navigate('VerificationScreen', {
-        code: res.data.data.code,
+        code: res.data.code,
         ...submitData,
       });
     } catch (error: any) {
@@ -60,7 +60,7 @@ const SignUpScreen = ({navigation}: any) => {
       console.log(`Can not register account errors, ${error}`);
       showToastMessage({
         type: 'error',
-        text1: error?.response?.data?.message || 'Network Errors!',
+        text1: error?.message || 'Network Errors!',
       });
     } finally {
       setIsLoading(false);

@@ -67,7 +67,7 @@ const ForgotPasswordScreen = ({navigation}: any) => {
 
       Alert.alert('Send mail', 'We sended a email includes new password!');
       navigation.navigate('ChangePasswordScreen', {
-        code: res.data.data.resetCode,
+        code: res.data.resetCode,
         ...submitData,
       });
 
