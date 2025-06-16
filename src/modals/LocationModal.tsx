@@ -1,6 +1,11 @@
 import Geolocation from '@react-native-community/geolocation';
 import MapboxGL from '@rnmapbox/maps';
-import {Pointer, SearchNormal} from 'iconsax-react-native';
+import {
+  CloseCircle,
+  LocationTick,
+  Pointer,
+  SearchNormal,
+} from 'iconsax-react-native';
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -22,6 +27,7 @@ import {appColors} from '../constants/appColors';
 import {appInfo} from '../constants/appInfos';
 import {LocationModel} from '../models/location-model';
 import {globalStyle} from '../styles/globalStyles';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoia2FpY2l0eTIwMDIiLCJhIjoiY21idGM5NmFhMDFwbzJpczNkYno2a2F0YiJ9._YpIUAUgypRi2KG_3SNvxQ',
@@ -131,7 +137,7 @@ const LocationModal = (props: Props) => {
           <View style={{flex: 1}}>
             <InputComponent
               affix={<SearchNormal color={appColors.gray_3} size={20} />}
-              placeholder="Search"
+              placeholder="Tìm kiếm"
               value={searchKey}
               onchange={val => setSearchKey(val)}
               styles={{marginBottom: 0}}
@@ -174,15 +180,45 @@ const LocationModal = (props: Props) => {
               />
             ) : (
               <View>
-                <TextComponent
-                  text={searchKey ? `Location not found` : 'Search Location'}
-                />
+                {!addressSelected ? (
+                  <TextComponent
+                    text={
+                      searchKey
+                        ? `Không tìm thấy địa điểm này`
+                        : 'Tìm kiếm địa điểm'
+                    }
+                  />
+                ) : (
+                  <RowComponent justify="center">
+                    <LocationTick
+                      size={16}
+                      color={appColors.green}
+                      variant="Bold"
+                    />
+                    <SpaceComponent width={5} />
+                    <TextComponent
+                      text={addressSelected}
+                      styles={{flex: 1}}
+                      numberOfLine={1}
+                    />
+                    <TouchableOpacity
+                      onPress={() => {
+                        setAddressSelected('');
+                      }}>
+                      <AntDesign
+                        name="close"
+                        size={16}
+                        color={appColors.text}
+                      />
+                    </TouchableOpacity>
+                  </RowComponent>
+                )}
               </View>
             )}
           </View>
 
           <SpaceComponent width={12} />
-          <ButtonComponent text="Cancel" type="link" onpress={handleCancel} />
+          <ButtonComponent text="Hủy" type="link" onpress={handleCancel} />
         </RowComponent>
       </View>
 

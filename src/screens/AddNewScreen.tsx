@@ -5,9 +5,12 @@ import {useSelector} from 'react-redux';
 import {
   ButtonComponent,
   ContainerComponent,
+  DateTimePickerComponent,
   InputComponent,
+  RowComponent,
   SectionComponent,
   SelectLocationComponent,
+  SpaceComponent,
   TextComponent,
 } from '../components';
 import {appColors} from '../constants/appColors';
@@ -86,6 +89,50 @@ const AddNewScreen = () => {
           )}
         />
 
+        <RowComponent>
+          <Controller
+            control={control}
+            name="startAt"
+            render={({field: {value, onChange}}) => (
+              <DateTimePickerComponent
+                label="Bắt đầu: "
+                selected={value}
+                onSelect={onChange}
+                mode="time"
+                modal={true}
+              />
+            )}
+          />
+          <SpaceComponent width={20} />
+          <Controller
+            control={control}
+            name="endAt"
+            render={({field: {value, onChange}}) => (
+              <DateTimePickerComponent
+                label="Kết thúc: "
+                selected={value}
+                onSelect={onChange}
+                mode="time"
+                modal={true}
+              />
+            )}
+          />
+        </RowComponent>
+
+        <Controller
+          control={control}
+          name="date"
+          render={({field: {value, onChange}}) => (
+            <DateTimePickerComponent
+              label="Ngày: "
+              selected={value}
+              onSelect={onChange}
+              mode="date"
+              modal={true}
+            />
+          )}
+        />
+
         <Controller
           name="locationTitle"
           control={control}
@@ -93,10 +140,10 @@ const AddNewScreen = () => {
             <InputComponent
               value={value as string}
               onchange={onChange}
-              placeholder="Location"
+              placeholder="Title Location"
               borderColor={errors.locationTitle && appColors.danger}
               placeholderTextColor={errors.locationTitle && appColors.danger}
-              numberOfLine={4}
+              numberOfLine={1}
               allowClear
               multiLine
             />

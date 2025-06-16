@@ -8,9 +8,14 @@ const EventSchema = Yup.object().shape({
   imageUrl: Yup.string(),
   users: Yup.array().of(Yup.string()),
   author: Yup.string(),
-  startAt: Yup.number(),
-  endAt: Yup.number(),
-  date: Yup.number(),
+
+  date: Yup.date().required('Please select a date.'),
+
+  startAt: Yup.date().required('Please select a start time.'),
+
+  endAt: Yup.date()
+    .required('Please select an end time.')
+    .min(Yup.ref('startAt'), 'End time must be later than start time'),
 });
 
 export default EventSchema;
