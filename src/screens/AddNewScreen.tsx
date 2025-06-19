@@ -6,6 +6,7 @@ import {
   ButtonComponent,
   ContainerComponent,
   DateTimePickerComponent,
+  DropdownPickerComponent,
   InputComponent,
   RowComponent,
   SectionComponent,
@@ -16,6 +17,7 @@ import {
 import {appColors} from '../constants/appColors';
 import {authSelector} from '../redux/reducers/authReducers';
 import EventSchema from '../schemas/eventSchema';
+import userAPI from '../apis/userApi';
 
 const AddNewScreen = () => {
   const auth = useSelector(authSelector);
@@ -52,6 +54,13 @@ const AddNewScreen = () => {
     console.log(data);
 
     try {
+    } catch (error) {}
+  };
+
+  const testAPi = async () => {
+    try {
+      const res = await userAPI.HandleUser('/getAll');
+      console.log(res);
     } catch (error) {}
   };
 
@@ -133,6 +142,12 @@ const AddNewScreen = () => {
           )}
         />
 
+        <DropdownPickerComponent
+          label="Mời người tham gia"
+          onSelect={() => {}}
+          value={[]}
+        />
+
         <Controller
           name="locationTitle"
           control={control}
@@ -156,11 +171,7 @@ const AddNewScreen = () => {
       </SectionComponent>
 
       <SectionComponent>
-        <ButtonComponent
-          text="Add New"
-          type="primary"
-          onpress={handleSubmit(handleAddNewEvent)}
-        />
+        <ButtonComponent text="Add New" type="primary" onpress={testAPi} />
       </SectionComponent>
     </ContainerComponent>
   );

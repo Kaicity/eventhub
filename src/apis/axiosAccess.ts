@@ -1,23 +1,14 @@
 import axios from 'axios';
 import queryString from 'query-string';
 import {appInfo} from '../constants/appInfos';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const getAccessToken = async () => {
-  const res = await AsyncStorage.getItem('auth');
-  return res ? JSON.parse(res)?.accesstoken : '';
-};
-
-const axiosClient = axios.create({
+const axiosAccess = axios.create({
   baseURL: appInfo.BASE_URL,
   paramsSerializer: params => queryString.stringify(params),
 });
 
-axiosClient.interceptors.request.use(async (config: any) => {
-  const accessToken = await getAccessToken();
-
+axiosAccess.interceptors.request.use(async (config: any) => {
   config.headers = {
-    Authorization: accessToken ? `Bearer ${accessToken}` : '',
     Accept: 'application/json',
     ...config.headers,
   };
@@ -27,7 +18,7 @@ axiosClient.interceptors.request.use(async (config: any) => {
   return config;
 });
 
-axiosClient.interceptors.response.use(
+axiosAccess.interceptors.response.use(
   res => {
     if (res.data && res.status === 200) {
       return res.data;
@@ -40,4 +31,4 @@ axiosClient.interceptors.response.use(
   },
 );
 
-export default axiosClient;
+export default axiosAccess;

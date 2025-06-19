@@ -6,7 +6,7 @@ class UserAPI {
     data?: any,
     methob?: 'get' | 'post' | 'put' | 'delete',
   ) => {
-    return await axiosClient(`/user${url}`, {
+    return await axiosClient(`/users${url}`, {
       method: methob ?? 'get',
       data,
     });
