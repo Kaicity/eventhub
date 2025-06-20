@@ -6,10 +6,11 @@ import {Provider} from 'react-redux';
 import {toastConfig} from './src/libs';
 import AppRouter from './src/navigators/AppRouter';
 import store from './src/redux/store';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const App = () => {
   return (
-    <>
+    <GestureHandlerRootView style={{flex: 1}}>
       <Provider store={store}>
         <StatusBar
           barStyle="dark-content"
@@ -22,7 +23,7 @@ const App = () => {
         </NavigationContainer>
       </Provider>
       <Toast config={toastConfig} />
-    </>
+    </GestureHandlerRootView>
   );
 };
 

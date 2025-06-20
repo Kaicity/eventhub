@@ -1,7 +1,8 @@
 import {yupResolver} from '@hookform/resolvers/yup';
-import React from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {useSelector} from 'react-redux';
+import userAPI from '../apis/userApi';
 import {
   ButtonComponent,
   ContainerComponent,
@@ -17,10 +18,37 @@ import {
 import {appColors} from '../constants/appColors';
 import {authSelector} from '../redux/reducers/authReducers';
 import EventSchema from '../schemas/eventSchema';
-import userAPI from '../apis/userApi';
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
+import {StyleSheet} from 'react-native';
 
 const AddNewScreen = () => {
   const auth = useSelector(authSelector);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  console.log(isDropdownOpen);
+
+  // hooks
+  const sheetRef = useRef<BottomSheet>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ['100%'], []);
+
+  // callbacks
+  const handleSheetChange = useCallback((index: any) => {
+    if (index === -1) {
+      setIsDropdownOpen(false);
+    }
+  }, []);
+
+  const handleSnapPress = useCallback((index: number) => {
+    sheetRef.current?.snapToIndex(index);
+  }, []);
+
+  const handleClosePress = useCallback(() => {
+    setIsDropdownOpen(false);
+    sheetRef.current?.close();
+  }, []);
 
   const {
     control,
@@ -65,7 +93,12 @@ const AddNewScreen = () => {
   };
 
   return (
-    <ContainerComponent isScroll title="Add New">
+    <ContainerComponent
+      isScroll
+      title="Add New"
+      styles={{
+        backgroundColor: isDropdownOpen ? 'rgba(0,0,0,0.1)' : 'transparent',
+      }}>
       <SectionComponent>
         <Controller
           name="title"
@@ -143,9 +176,14 @@ const AddNewScreen = () => {
         />
 
         <DropdownPickerComponent
-          label="Mời người tham gia"
-          onSelect={() => {}}
+          label="Mời bạn tham gia"
           value={[]}
+          selected={undefined}
+          onSelect={() => {}}
+          openModal={() => {
+            setIsDropdownOpen(true);
+            handleSnapPress(0);
+          }}
         />
 
         <Controller
@@ -173,8 +211,28 @@ const AddNewScreen = () => {
       <SectionComponent>
         <ButtonComponent text="Add New" type="primary" onpress={testAPi} />
       </SectionComponent>
+
+      {/* Modal */}
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={snapPoints}
+        enableDynamicSizing={false}
+        enablePanDownToClose={true}
+        onClose={handleClosePress}>
+        <BottomSheetView style={styles.contentContainer}>
+          <TextComponent text="HELLO EM TRAI" />
+        </BottomSheetView>
+      </BottomSheet>
     </ContainerComponent>
   );
 };
 
 export default AddNewScreen;
+
+const styles = StyleSheet.create({
+  contentContainer: {
+    flex: 1,
+    padding: 36,
+    alignItems: 'center',
+  },
+});
