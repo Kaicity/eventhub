@@ -97,7 +97,7 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
       //reset gia tri
       setCurrentCode(res.data.code);
       setLimit(120);
-      setDigits(['', '', '', '']);
+      setDigits(['', '', '', '', '', '']);
 
       setIsLoading(false);
     } catch (error) {
@@ -131,18 +131,12 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
   };
 
   const renderValidationError = () => {
-    const errorMessages = [
-      errors.password?.message,
-      errors.confirmPassword?.message,
-    ].filter(Boolean);
+    const errorMessages = [errors.password?.message, errors.confirmPassword?.message].filter(
+      Boolean,
+    );
 
     if (errorMessages.length > 0) {
-      return (
-        <TextComponent
-          text={`* ${errorMessages.join('\n* ')}`}
-          color={appColors.danger}
-        />
-      );
+      return <TextComponent text={`* ${errorMessages.join('\n* ')}`} color={appColors.danger} />;
     }
     return null;
   };
@@ -227,9 +221,7 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
               <RowComponent justify="center">
                 <TextComponent text="Re-send code in " flex={0} />
                 <TextComponent
-                  text={`0${Math.floor(limit / 60)}:${
-                    limit % 60 < 10 ? '0' : ''
-                  }${limit % 60}`}
+                  text={`0${Math.floor(limit / 60)}:${limit % 60 < 10 ? '0' : ''}${limit % 60}`}
                   flex={0}
                   color={appColors.link}
                 />
@@ -264,12 +256,7 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
                   borderColor={errors.password && appColors.danger}
                   placeholderTextColor={errors.password && appColors.danger}
                   affix={
-                    <Lock
-                      color={
-                        errors.password ? appColors.danger : appColors.gray_1
-                      }
-                      size={22}
-                    />
+                    <Lock color={errors.password ? appColors.danger : appColors.gray_1} size={22} />
                   }
                   isPassword
                 />
@@ -286,16 +273,10 @@ const ChangePasswordScreen = ({navigation, route}: any) => {
                   onchange={onChange}
                   allowClear
                   borderColor={errors.confirmPassword && appColors.danger}
-                  placeholderTextColor={
-                    errors.confirmPassword && appColors.danger
-                  }
+                  placeholderTextColor={errors.confirmPassword && appColors.danger}
                   affix={
                     <Lock
-                      color={
-                        errors.confirmPassword
-                          ? appColors.danger
-                          : appColors.gray_1
-                      }
+                      color={errors.confirmPassword ? appColors.danger : appColors.gray_1}
                       size={22}
                     />
                   }

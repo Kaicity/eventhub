@@ -3,6 +3,7 @@ export const appColors = {
   primay_2: '',
   white: '#ffffff',
   white_2: '#fcfcfc',
+  white_3: '#f5f5f5',
   text: '#120D26',
   gray_1: '#807A7A',
   gray_2: '#747688',

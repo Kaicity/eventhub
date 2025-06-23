@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 const EventSchema = Yup.object().shape({
   title: Yup.string().required('Please enter a title for the event.'),
-  description: Yup.string().required('Please provide a description.'),
+  description: Yup.string(),
   locationTitle: Yup.string(),
   locationAddress: Yup.string(),
   imageUrl: Yup.string(),

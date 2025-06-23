@@ -1,9 +1,8 @@
 import axios from 'axios';
 import queryString from 'query-string';
-import {appInfo} from '../constants/appInfos';
 
 const axiosAccess = axios.create({
-  baseURL: appInfo.BASE_URL,
+  baseURL: '',
   paramsSerializer: params => queryString.stringify(params),
 });
 
@@ -14,7 +13,6 @@ axiosAccess.interceptors.request.use(async (config: any) => {
   };
 
   config.data;
-
   return config;
 });
 

@@ -1,6 +1,9 @@
+import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+import {Portal} from '@gorhom/portal';
 import {yupResolver} from '@hookform/resolvers/yup';
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import userAPI from '../apis/userApi';
 import {
@@ -18,26 +21,32 @@ import {
 import {appColors} from '../constants/appColors';
 import {authSelector} from '../redux/reducers/authReducers';
 import EventSchema from '../schemas/eventSchema';
-import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
-import {StyleSheet} from 'react-native';
+import {SearchNormal1} from 'iconsax-react-native';
+import type {UsersItemSelectedModel} from '../models/select-model';
+import {fontFamilies} from '../constants/fontFamilies';
+
+const OPTIONS = ['Option 1', 'Option 2', 'Option 3'];
 
 const AddNewScreen = () => {
   const auth = useSelector(authSelector);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchKey, setSearchKey] = useState('');
+  const [usersSelected, setUsersSelected] = useState<UsersItemSelectedModel[]>([]);
 
-  console.log(isDropdownOpen);
+  useEffect(() => {
+    handleGetAllUsers();
+  }, []);
 
   // hooks
   const sheetRef = useRef<BottomSheet>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['100%'], []);
+  const snapPoints = useMemo(() => ['50%', '90%'], []);
 
   // callbacks
   const handleSheetChange = useCallback((index: any) => {
     if (index === -1) {
-      setIsDropdownOpen(false);
+      console.log(index);
     }
   }, []);
 
@@ -46,7 +55,6 @@ const AddNewScreen = () => {
   }, []);
 
   const handleClosePress = useCallback(() => {
-    setIsDropdownOpen(false);
     sheetRef.current?.close();
   }, []);
 
@@ -62,18 +70,10 @@ const AddNewScreen = () => {
   setValue('author', auth?.id);
 
   const renderValidationError = () => {
-    const errorMessages = [
-      errors.title?.message,
-      errors.description?.message,
-    ].filter(Boolean);
+    const errorMessages = [errors.title?.message, errors.description?.message].filter(Boolean);
 
     if (errorMessages.length > 0) {
-      return (
-        <TextComponent
-          text={`* ${errorMessages.join('\n* ')}`}
-          color={appColors.danger}
-        />
-      );
+      return <TextComponent text={`* ${errorMessages.join('\n* ')}`} color={appColors.danger} />;
     }
     return null;
   };
@@ -85,29 +85,42 @@ const AddNewScreen = () => {
     } catch (error) {}
   };
 
-  const testAPi = async () => {
+  const handleGetAllUsers = async () => {
     try {
       const res = await userAPI.HandleUser('/getAll');
       console.log(res);
-    } catch (error) {}
+
+      if (res && res.data) {
+        const items: UsersItemSelectedModel[] = [];
+
+        res.data.forEach((item: any) =>
+          items.push({
+            label: item.fullname,
+            value: item.id,
+            email: item.email,
+            imageUrl: item.imageUrl,
+          }),
+        );
+
+        setUsersSelected(items);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <ContainerComponent
-      isScroll
-      title="Add New"
-      styles={{
-        backgroundColor: isDropdownOpen ? 'rgba(0,0,0,0.1)' : 'transparent',
-      }}>
+    <ContainerComponent isScroll title="Add New">
       <SectionComponent>
         <Controller
           name="title"
           control={control}
           render={({field: {onChange, value}}) => (
             <InputComponent
+              label="Tên sự kiện"
               value={value ?? ''}
               onchange={onChange}
-              placeholder="Title"
+              placeholder="Nhập sự kiện"
               borderColor={errors.title && appColors.danger}
               placeholderTextColor={errors.title && appColors.danger}
               allowClear
@@ -119,11 +132,10 @@ const AddNewScreen = () => {
           control={control}
           render={({field: {onChange, value}}) => (
             <InputComponent
-              value={value}
+              label="Mô tả"
+              value={value ?? ''}
               onchange={onChange}
-              placeholder="Description"
-              borderColor={errors.description && appColors.danger}
-              placeholderTextColor={errors.description && appColors.danger}
+              placeholder="Hãy mô tả về sự kiện này"
               numberOfLine={4}
               allowClear
               multiLine
@@ -176,12 +188,12 @@ const AddNewScreen = () => {
         />
 
         <DropdownPickerComponent
-          label="Mời bạn tham gia"
-          value={[]}
+          label="Mời bạn bè"
+          title="Chọn người tham gia"
+          value={usersSelected}
           selected={undefined}
           onSelect={() => {}}
           openModal={() => {
-            setIsDropdownOpen(true);
             handleSnapPress(0);
           }}
         />
@@ -191,9 +203,10 @@ const AddNewScreen = () => {
           control={control}
           render={({field: {onChange, value}}) => (
             <InputComponent
+              label="Vị trí"
               value={value as string}
               onchange={onChange}
-              placeholder="Title Location"
+              placeholder="Vị trí đề cập"
               borderColor={errors.locationTitle && appColors.danger}
               placeholderTextColor={errors.locationTitle && appColors.danger}
               numberOfLine={1}
@@ -209,20 +222,82 @@ const AddNewScreen = () => {
       </SectionComponent>
 
       <SectionComponent>
-        <ButtonComponent text="Add New" type="primary" onpress={testAPi} />
+        <ButtonComponent text="Add New" type="primary" onpress={handleSubmit(handleAddNewEvent)} />
       </SectionComponent>
 
-      {/* Modal */}
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        enableDynamicSizing={false}
-        enablePanDownToClose={true}
-        onClose={handleClosePress}>
-        <BottomSheetView style={styles.contentContainer}>
-          <TextComponent text="HELLO EM TRAI" />
-        </BottomSheetView>
-      </BottomSheet>
+      {/* Modal bottom sheet */}
+      <Portal>
+        <BottomSheet
+          onChange={handleSheetChange}
+          ref={sheetRef}
+          snapPoints={snapPoints}
+          enableDynamicSizing={false}
+          enablePanDownToClose={true}
+          index={-1}
+          onClose={handleClosePress}
+          backdropComponent={props => (
+            <BottomSheetBackdrop
+              {...props}
+              disappearsOnIndex={-1}
+              appearsOnIndex={0}
+              opacity={0.4}
+            />
+          )}>
+          <View style={styles.sheetContent}>
+            <RowComponent>
+              <View style={{flex: 1}}>
+                <InputComponent
+                  placeholder="Tìm kiếm..."
+                  value={searchKey}
+                  onchange={val => setSearchKey(val)}
+                  styles={{marginBottom: 0}}
+                  affix={<SearchNormal1 size={18} color={appColors.primary} />}
+                />
+              </View>
+              <SpaceComponent width={20} />
+              <ButtonComponent type="link" text="Hủy" onpress={handleClosePress} />
+            </RowComponent>
+
+            <SpaceComponent height={20} />
+
+            <FlatList
+              data={usersSelected}
+              keyExtractor={item => item.value}
+              renderItem={({item}) => (
+                <RowComponent styles={styles.listItem} onPress={() => {}}>
+                  <View style={[styles.avatar, {backgroundColor: appColors.gray_3}]}>
+                    <TextComponent
+                      text={
+                        item && item.label
+                          ? (() => {
+                              const parts = item.label.split(' ');
+                              const lastName = parts[parts.length - 1];
+                              return lastName.substring(0, 1).toUpperCase();
+                            })()
+                          : ''
+                      }
+                      color={appColors.white}
+                      font={fontFamilies.medium}
+                      size={16}
+                    />
+                  </View>
+
+                  <SpaceComponent width={10} />
+
+                  <RowComponent
+                    styles={{
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                    }}>
+                    <TextComponent text={item.label} />
+                    <TextComponent text={item.email} />
+                  </RowComponent>
+                </RowComponent>
+              )}
+            />
+          </View>
+        </BottomSheet>
+      </Portal>
     </ContainerComponent>
   );
 };
@@ -230,9 +305,29 @@ const AddNewScreen = () => {
 export default AddNewScreen;
 
 const styles = StyleSheet.create({
-  contentContainer: {
+  container: {flex: 1, justifyContent: 'center', padding: 16},
+  selectBox: {
+    padding: 12,
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
+  },
+  sheetContent: {
     flex: 1,
-    padding: 36,
+    padding: 20,
+  },
+  listItem: {
+    paddingVertical: 12,
+    justifyContent: 'flex-start',
     alignItems: 'center',
+  },
+
+  avatar: {
+    width: 42,
+    height: 42,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

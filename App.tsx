@@ -7,22 +7,21 @@ import {toastConfig} from './src/libs';
 import AppRouter from './src/navigators/AppRouter';
 import store from './src/redux/store';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {PortalProvider} from '@gorhom/portal';
 
 const App = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <Provider store={store}>
-        <StatusBar
-          barStyle="dark-content"
-          backgroundColor="transparent"
-          translucent
-        />
+      <PortalProvider>
+        <Provider store={store}>
+          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-        <NavigationContainer>
-          <AppRouter />
-        </NavigationContainer>
-      </Provider>
-      <Toast config={toastConfig} />
+          <NavigationContainer>
+            <AppRouter />
+          </NavigationContainer>
+        </Provider>
+        <Toast config={toastConfig} />
+      </PortalProvider>
     </GestureHandlerRootView>
   );
 };

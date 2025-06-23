@@ -84,4 +84,8 @@ export const globalStyle = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 14,
   },
+  overlay: {
+    opacity: 0.1,
+    zIndex: 1,
+  },
 });
