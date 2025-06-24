@@ -1,9 +1,14 @@
-import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetFlatList,
+  BottomSheetFooter,
+} from '@gorhom/bottom-sheet';
 import {Portal} from '@gorhom/portal';
 import {yupResolver} from '@hookform/resolvers/yup';
+import {SearchNormal1} from 'iconsax-react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import userAPI from '../apis/userApi';
 import {
@@ -19,31 +24,26 @@ import {
   TextComponent,
 } from '../components';
 import {appColors} from '../constants/appColors';
+import {fontFamilies} from '../constants/fontFamilies';
+import type {UserSelectedModel} from '../models/user-select-model';
 import {authSelector} from '../redux/reducers/authReducers';
 import EventSchema from '../schemas/eventSchema';
-import {SearchNormal1} from 'iconsax-react-native';
-import type {UsersItemSelectedModel} from '../models/select-model';
-import {fontFamilies} from '../constants/fontFamilies';
-
-const OPTIONS = ['Option 1', 'Option 2', 'Option 3'];
 
 const AddNewScreen = () => {
   const auth = useSelector(authSelector);
 
   const [searchKey, setSearchKey] = useState('');
-  const [usersSelected, setUsersSelected] = useState<UsersItemSelectedModel[]>([]);
+  const [usersSelected, setUsersSelected] = useState<UserSelectedModel[]>([]);
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
   useEffect(() => {
     handleGetAllUsers();
   }, []);
 
-  // hooks
   const sheetRef = useRef<BottomSheet>(null);
 
-  // variables
-  const snapPoints = useMemo(() => ['50%', '90%'], []);
+  const snapPoints = useMemo(() => ['90%'], []);
 
-  // callbacks
   const handleSheetChange = useCallback((index: any) => {
     if (index === -1) {
       console.log(index);
@@ -91,12 +91,12 @@ const AddNewScreen = () => {
       console.log(res);
 
       if (res && res.data) {
-        const items: UsersItemSelectedModel[] = [];
+        const items: UserSelectedModel[] = [];
 
         res.data.forEach((item: any) =>
           items.push({
-            label: item.fullname,
-            value: item.id,
+            fullname: item.fullname,
+            id: item.id,
             email: item.email,
             imageUrl: item.imageUrl,
           }),
@@ -108,6 +108,22 @@ const AddNewScreen = () => {
       console.log(error);
     }
   };
+
+  const handleSelectUser = useCallback((item: UserSelectedModel) => {
+    setSelectedUserIds(prev => {
+      const isSelected = prev.includes(item.id);
+      return isSelected ? prev.filter(id => id !== item.id) : [...prev, item.id];
+    });
+  }, []);
+
+  const renderFooter = useCallback(
+    (props: any) => (
+      <BottomSheetFooter {...props} bottomInset={24}>
+        <ButtonComponent type="primary" text="Xác nhận" onpress={handleClosePress} />
+      </BottomSheetFooter>
+    ),
+    [],
+  );
 
   return (
     <ContainerComponent isScroll title="Add New">
@@ -189,10 +205,10 @@ const AddNewScreen = () => {
 
         <DropdownPickerComponent
           label="Mời bạn bè"
-          title="Chọn người tham gia"
+          title="Chọn"
           value={usersSelected}
-          selected={undefined}
-          onSelect={() => {}}
+          selected={selectedUserIds}
+          onSelect={val => setSelectedUserIds(Array.isArray(val) ? val : [val])}
           openModal={() => {
             handleSnapPress(0);
           }}
@@ -242,7 +258,8 @@ const AddNewScreen = () => {
               appearsOnIndex={0}
               opacity={0.4}
             />
-          )}>
+          )}
+          footerComponent={renderFooter}>
           <View style={styles.sheetContent}>
             <RowComponent>
               <View style={{flex: 1}}>
@@ -260,40 +277,50 @@ const AddNewScreen = () => {
 
             <SpaceComponent height={20} />
 
-            <FlatList
+            <BottomSheetFlatList
               data={usersSelected}
-              keyExtractor={item => item.value}
-              renderItem={({item}) => (
-                <RowComponent styles={styles.listItem} onPress={() => {}}>
-                  <View style={[styles.avatar, {backgroundColor: appColors.gray_3}]}>
-                    <TextComponent
-                      text={
-                        item && item.label
-                          ? (() => {
-                              const parts = item.label.split(' ');
-                              const lastName = parts[parts.length - 1];
-                              return lastName.substring(0, 1).toUpperCase();
-                            })()
-                          : ''
-                      }
-                      color={appColors.white}
-                      font={fontFamilies.medium}
-                      size={16}
-                    />
-                  </View>
+              keyExtractor={item => item.id}
+              renderItem={({item}) => {
+                const isSelected = selectedUserIds.includes(item.id);
 
-                  <SpaceComponent width={10} />
+                return (
+                  <RowComponent styles={[styles.listItem]} onPress={() => handleSelectUser(item)}>
+                    <View style={[styles.avatar, {backgroundColor: appColors.gray_3}]}>
+                      <TextComponent
+                        text={(() => {
+                          const parts = item.fullname.split(' ');
+                          const lastName = parts[parts.length - 1];
+                          return lastName.substring(0, 1).toUpperCase();
+                        })()}
+                        color={appColors.white}
+                        font={fontFamilies.medium}
+                        size={16}
+                      />
+                    </View>
 
-                  <RowComponent
-                    styles={{
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                    }}>
-                    <TextComponent text={item.label} />
-                    <TextComponent text={item.email} />
+                    <SpaceComponent width={10} />
+
+                    <RowComponent
+                      styles={{flexDirection: 'column', alignItems: 'flex-start', flex: 1}}>
+                      <TextComponent text={item.fullname} />
+                      <TextComponent text={item.email} size={12} color={appColors.gray_1} />
+                    </RowComponent>
+
+                    <View style={styles.diot}>
+                      {isSelected && (
+                        <View
+                          style={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: 5,
+                            backgroundColor: appColors.blue,
+                          }}
+                        />
+                      )}
+                    </View>
                   </RowComponent>
-                </RowComponent>
-              )}
+                );
+              }}
             />
           </View>
         </BottomSheet>
@@ -329,5 +356,20 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  diot: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: appColors.gray_4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  footerContainer: {
+    padding: 12,
+    margin: 12,
   },
 });
