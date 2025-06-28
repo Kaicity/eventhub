@@ -5,10 +5,12 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import {Portal} from '@gorhom/portal';
 import {yupResolver} from '@hookform/resolvers/yup';
+import {addMinutes, format, isBefore} from 'date-fns';
+import {vi} from 'date-fns/locale';
 import {Box1, SearchNormal1} from 'iconsax-react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import userAPI from '../apis/userApi';
 import {
@@ -25,13 +27,11 @@ import {
 } from '../components';
 import {appColors} from '../constants/appColors';
 import {fontFamilies} from '../constants/fontFamilies';
+import {showToastMessage} from '../libs';
+import {LoadingModal} from '../modals';
 import type {UserSelectedModel} from '../models/user-select-model';
 import {authSelector} from '../redux/reducers/authReducers';
 import EventSchema from '../schemas/eventSchema';
-import {LoadingModal} from '../modals';
-import {addMinutes, format, isBefore} from 'date-fns';
-import {vi} from 'date-fns/locale';
-import {showToastMessage} from '../libs';
 
 const AddNewScreen = () => {
   const auth = useSelector(authSelector);
@@ -44,6 +44,10 @@ const AddNewScreen = () => {
   useEffect(() => {
     handleGetAllUsers();
   }, []);
+
+  useEffect(() => {
+    handleAccessSelectedMember();
+  }, [selectedUserIds, usersSelect]);
 
   const sheetRef = useRef<BottomSheet>(null);
 
@@ -90,7 +94,14 @@ const AddNewScreen = () => {
   };
 
   const handleAddNewEvent = async (data: any) => {
-    console.log(data);
+    const initial = {
+      ...data,
+      startAt: format(new Date(getValues('startAt')), 'HH:mm'),
+      endAt: format(new Date(getValues('endAt')), 'HH:mm'),
+      date: format(new Date(getValues('date')), 'dd-MM-yyyy', {locale: vi}),
+    };
+
+    console.log(initial);
 
     try {
     } catch (error) {}
@@ -147,6 +158,12 @@ const AddNewScreen = () => {
         setValue('endAt', addMinutes(new Date(), 60));
       } else return;
     }
+  };
+
+  const handleAccessSelectedMember = () => {
+    if (selectedUserIds && selectedUserIds.length > 0) {
+      setValue('users', selectedUserIds);
+    } else setValue('users', []);
   };
 
   const renderFooter = useCallback(
