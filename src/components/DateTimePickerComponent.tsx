@@ -1,4 +1,4 @@
-import {format} from 'date-fns';
+import {addMinutes, format} from 'date-fns';
 import {vi} from 'date-fns/locale';
 import {Calendar, Clock} from 'iconsax-react-native';
 import React, {useState} from 'react';
@@ -16,10 +16,12 @@ interface Props {
   modal?: boolean;
   onSelect: (val: any) => void;
   label?: string;
+  minimumDate?: Date;
+  fromMinute?: number;
 }
 
 const DateTimePickerComponent = (props: Props) => {
-  const {label, selected, mode, modal, onSelect} = props;
+  const {label, selected, mode, modal, onSelect, minimumDate, fromMinute} = props;
   const [isShowDatePicker, setIsShowDatePicker] = useState(false);
 
   return (
@@ -50,12 +52,14 @@ const DateTimePickerComponent = (props: Props) => {
       </RowComponent>
 
       <DatePicker
+        minimumDate={minimumDate}
+        locale="vi-VI"
         title={mode === 'time' ? 'Chọn thời gian' : 'Chọn ngày'}
         cancelText="Hủy"
         confirmText="Xác Nhận"
         open={isShowDatePicker}
         mode={mode}
-        date={selected ? new Date(selected) : new Date()}
+        date={selected ? new Date(selected) : addMinutes(new Date(), fromMinute || 0)}
         modal={modal}
         onCancel={() => setIsShowDatePicker(false)}
         onConfirm={val => {

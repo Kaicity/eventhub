@@ -15,6 +15,7 @@ import TextComponent from './TextComponent';
 
 interface Props {
   label?: string;
+  labelColor?: string;
   value: string;
   onchange: (val: string) => void;
   placeholder?: string;
@@ -34,6 +35,7 @@ interface Props {
 const InputComponent = (props: Props) => {
   const {
     label,
+    labelColor,
     value,
     onchange,
     placeholder,
@@ -54,7 +56,7 @@ const InputComponent = (props: Props) => {
 
   return (
     <>
-      {label && <TextComponent text={label} styles={{marginBottom: 8}} />}
+      {label && <TextComponent text={label} styles={{marginBottom: 8}} color={labelColor} />}
       <View
         style={[
           globalStyle.inputContainer,
@@ -79,11 +81,7 @@ const InputComponent = (props: Props) => {
         />
         {suffix ?? suffix}
         <TouchableOpacity
-          onPress={
-            isPassword
-              ? () => setIsShowPassword(!isShowPassword)
-              : () => onchange('')
-          }>
+          onPress={isPassword ? () => setIsShowPassword(!isShowPassword) : () => onchange('')}>
           {isPassword ? (
             <FontAwesome
               name={isShowPassword ? 'eye-slash' : 'eye'}
@@ -93,9 +91,7 @@ const InputComponent = (props: Props) => {
           ) : (
             value &&
             value.length > 0 &&
-            allowClear && (
-              <AntDesign name="close" size={22} color={appColors.text} />
-            )
+            allowClear && <AntDesign name="close" size={22} color={appColors.text} />
           )}
         </TouchableOpacity>
       </View>

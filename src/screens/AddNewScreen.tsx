@@ -5,7 +5,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import {Portal} from '@gorhom/portal';
 import {yupResolver} from '@hookform/resolvers/yup';
-import {SearchNormal1} from 'iconsax-react-native';
+import {Box1, SearchNormal1} from 'iconsax-react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {StyleSheet, Text, View} from 'react-native';
@@ -28,12 +28,17 @@ import {fontFamilies} from '../constants/fontFamilies';
 import type {UserSelectedModel} from '../models/user-select-model';
 import {authSelector} from '../redux/reducers/authReducers';
 import EventSchema from '../schemas/eventSchema';
+import {LoadingModal} from '../modals';
+import {addMinutes, format, isBefore} from 'date-fns';
+import {vi} from 'date-fns/locale';
+import {showToastMessage} from '../libs';
 
 const AddNewScreen = () => {
   const auth = useSelector(authSelector);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [searchKey, setSearchKey] = useState('');
-  const [usersSelected, setUsersSelected] = useState<UserSelectedModel[]>([]);
+  const [usersSelect, setUsersSelect] = useState<UserSelectedModel[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -63,6 +68,7 @@ const AddNewScreen = () => {
     handleSubmit,
     formState: {errors},
     setValue,
+    getValues,
   } = useForm({
     resolver: yupResolver(EventSchema),
   });
@@ -70,7 +76,12 @@ const AddNewScreen = () => {
   setValue('author', auth?.id);
 
   const renderValidationError = () => {
-    const errorMessages = [errors.title?.message, errors.description?.message].filter(Boolean);
+    const errorMessages = [
+      errors.title?.message,
+      errors.startAt?.message,
+      errors.endAt?.message,
+      errors.date?.message,
+    ].filter(Boolean);
 
     if (errorMessages.length > 0) {
       return <TextComponent text={`* ${errorMessages.join('\n* ')}`} color={appColors.danger} />;
@@ -86,9 +97,9 @@ const AddNewScreen = () => {
   };
 
   const handleGetAllUsers = async () => {
+    setIsLoading(true);
     try {
       const res = await userAPI.HandleUser('/getAll');
-      console.log(res);
 
       if (res && res.data) {
         const items: UserSelectedModel[] = [];
@@ -101,11 +112,13 @@ const AddNewScreen = () => {
             imageUrl: item.imageUrl,
           }),
         );
-
-        setUsersSelected(items);
+        setUsersSelect(items);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,6 +128,26 @@ const AddNewScreen = () => {
       return isSelected ? prev.filter(id => id !== item.id) : [...prev, item.id];
     });
   }, []);
+
+  const handleCheckDateTimePicker = (endAt: any) => {
+    if (endAt) {
+      const startAt = getValues('startAt');
+      const startDate = new Date(startAt);
+      const endDate = new Date(endAt);
+
+      const isValid = isBefore(startDate, endDate);
+      if (!isValid) {
+        showToastMessage({
+          type: 'error',
+          text1: 'Giờ bắt đầu phải trước giờ kết thúc',
+        });
+
+        // Cách nhau 30 phút cho mỗi thời điểm
+        setValue('startAt', addMinutes(new Date(), 30));
+        setValue('endAt', addMinutes(new Date(), 60));
+      } else return;
+    }
+  };
 
   const renderFooter = useCallback(
     (props: any) => (
@@ -134,6 +167,7 @@ const AddNewScreen = () => {
           render={({field: {onChange, value}}) => (
             <InputComponent
               label="Tên sự kiện"
+              labelColor={errors.title ? appColors.red : ''}
               value={value ?? ''}
               onchange={onChange}
               placeholder="Nhập sự kiện"
@@ -166,6 +200,8 @@ const AddNewScreen = () => {
             render={({field: {value, onChange}}) => (
               <DateTimePickerComponent
                 label="Bắt đầu: "
+                minimumDate={addMinutes(new Date(), 30)}
+                fromMinute={30}
                 selected={value}
                 onSelect={onChange}
                 mode="time"
@@ -180,8 +216,12 @@ const AddNewScreen = () => {
             render={({field: {value, onChange}}) => (
               <DateTimePickerComponent
                 label="Kết thúc: "
+                fromMinute={60}
                 selected={value}
-                onSelect={onChange}
+                onSelect={val => {
+                  onChange(val);
+                  handleCheckDateTimePicker(val);
+                }}
                 mode="time"
                 modal={true}
               />
@@ -194,6 +234,7 @@ const AddNewScreen = () => {
           name="date"
           render={({field: {value, onChange}}) => (
             <DateTimePickerComponent
+              minimumDate={new Date()}
               label="Ngày: "
               selected={value}
               onSelect={onChange}
@@ -205,8 +246,8 @@ const AddNewScreen = () => {
 
         <DropdownPickerComponent
           label="Mời bạn bè"
-          title="Chọn"
-          value={usersSelected}
+          title="Chọn người tham gia"
+          value={usersSelect}
           selected={selectedUserIds}
           onSelect={val => setSelectedUserIds(Array.isArray(val) ? val : [val])}
           openModal={() => {
@@ -238,7 +279,11 @@ const AddNewScreen = () => {
       </SectionComponent>
 
       <SectionComponent>
-        <ButtonComponent text="Add New" type="primary" onpress={handleSubmit(handleAddNewEvent)} />
+        <ButtonComponent
+          text="Tạo sự kiện"
+          type="primary"
+          onpress={handleSubmit(handleAddNewEvent)}
+        />
       </SectionComponent>
 
       {/* Modal bottom sheet */}
@@ -277,52 +322,62 @@ const AddNewScreen = () => {
 
             <SpaceComponent height={20} />
 
-            <BottomSheetFlatList
-              data={usersSelected}
-              keyExtractor={item => item.id}
-              renderItem={({item}) => {
-                const isSelected = selectedUserIds.includes(item.id);
+            {usersSelect.length > 0 ? (
+              <BottomSheetFlatList
+                data={usersSelect}
+                keyExtractor={item => item.id}
+                renderItem={({item}) => {
+                  const isSelected = selectedUserIds.includes(item.id);
 
-                return (
-                  <RowComponent styles={[styles.listItem]} onPress={() => handleSelectUser(item)}>
-                    <View style={[styles.avatar, {backgroundColor: appColors.gray_3}]}>
-                      <TextComponent
-                        text={(() => {
-                          const parts = item.fullname.split(' ');
-                          const lastName = parts[parts.length - 1];
-                          return lastName.substring(0, 1).toUpperCase();
-                        })()}
-                        color={appColors.white}
-                        font={fontFamilies.medium}
-                        size={16}
-                      />
-                    </View>
-
-                    <SpaceComponent width={10} />
-
-                    <RowComponent
-                      styles={{flexDirection: 'column', alignItems: 'flex-start', flex: 1}}>
-                      <TextComponent text={item.fullname} />
-                      <TextComponent text={item.email} size={12} color={appColors.gray_1} />
-                    </RowComponent>
-
-                    <View style={styles.diot}>
-                      {isSelected && (
-                        <View
-                          style={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: 5,
-                            backgroundColor: appColors.blue,
-                          }}
+                  return (
+                    <RowComponent styles={[styles.listItem]} onPress={() => handleSelectUser(item)}>
+                      <View style={[styles.avatar, {backgroundColor: appColors.gray_3}]}>
+                        <TextComponent
+                          text={(() => {
+                            const parts = item.fullname.split(' ');
+                            const lastName = parts[parts.length - 1];
+                            return lastName.substring(0, 1).toUpperCase();
+                          })()}
+                          color={appColors.white}
+                          font={fontFamilies.medium}
+                          size={16}
                         />
-                      )}
-                    </View>
-                  </RowComponent>
-                );
-              }}
-            />
+                      </View>
+
+                      <SpaceComponent width={10} />
+
+                      <RowComponent
+                        styles={{flexDirection: 'column', alignItems: 'flex-start', flex: 1}}>
+                        <TextComponent text={item.fullname} />
+                        <TextComponent text={item.email} size={12} color={appColors.gray_1} />
+                      </RowComponent>
+
+                      <View style={styles.diot}>
+                        {isSelected && (
+                          <View
+                            style={{
+                              width: 10,
+                              height: 10,
+                              borderRadius: 5,
+                              backgroundColor: appColors.blue,
+                            }}
+                          />
+                        )}
+                      </View>
+                    </RowComponent>
+                  );
+                }}
+              />
+            ) : (
+              <RowComponent
+                justify="center"
+                styles={{flexDirection: 'column', alignItems: 'center', gap: 6}}>
+                <Box1 size={18} color={appColors.gray_1} />
+                <TextComponent text="Không có dữ liệu" color={appColors.gray_1} />
+              </RowComponent>
+            )}
           </View>
+          <LoadingModal visible={isLoading} />
         </BottomSheet>
       </Portal>
     </ContainerComponent>
