@@ -8,6 +8,8 @@ import {
   StatusBar,
   TouchableOpacity,
   View,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native';
 import {appColors} from '../constants/appColors';
 import {fontFamilies} from '../constants/fontFamilies';
@@ -21,15 +23,16 @@ interface Props {
   title?: string;
   children: ReactNode;
   back?: boolean;
+  styles?: StyleProp<ViewStyle>;
 }
 
 const ContainerComponent = (props: Props) => {
-  const {isImageBackground, isScroll, title, children, back} = props;
+  const {isImageBackground, isScroll, title, children, back, styles} = props;
   const navigation: any = useNavigation();
 
   const headerComponent = () => {
     return (
-      <View style={{flex: 1, paddingTop: 30}}>
+      <View style={[{flex: 1, paddingTop: 30}, styles]}>
         {(title || back) && (
           <RowComponent
             justify="flex-start"

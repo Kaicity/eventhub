@@ -106,10 +106,10 @@ const LoginScreen = ({navigation}: any) => {
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
-      console.log(error);
+
       showToastMessage({
         type: 'error',
-        text1: error?.response?.data?.message || 'Network Errors!',
+        text1: error?.message || 'Network Errors!',
       });
     } finally {
       setIsLoading(false);

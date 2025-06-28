@@ -96,18 +96,15 @@ const DrawerCustomComponent = ({navigation}: any) => {
               params: {screen: 'ProfilesScreen'},
             });
           }}>
-          {getUser.data.photoUrl ? (
-            <Image
-              source={{uri: getUser.data.photoUrl}}
-              style={[styles.avatar]}
-            />
+          {getUser.photoUrl ? (
+            <Image source={{uri: getUser.photoUrl}} style={[styles.avatar]} />
           ) : (
             <View style={[styles.avatar, {backgroundColor: appColors.gray_3}]}>
               <TextComponent
                 text={
-                  getUser.data && getUser.data.fullname
+                  getUser && getUser.fullname
                     ? (() => {
-                        const parts = getUser.data.fullname.split(' ');
+                        const parts = getUser.fullname.split(' ');
                         const lastName = parts[parts.length - 1];
                         return lastName.substring(0, 1).toUpperCase();
                       })()
@@ -120,7 +117,7 @@ const DrawerCustomComponent = ({navigation}: any) => {
             </View>
           )}
           <TextComponent
-            text={getUser.data.fullname || 'undefined'}
+            text={getUser.fullname || 'undefined'}
             font={fontFamilies.medium}
             size={18}
           />

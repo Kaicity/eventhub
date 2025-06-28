@@ -5,6 +5,8 @@ import CardPromotionComponent from './CardPromotionComponent';
 import CategoriesListComponent from './CategoriesListComponent';
 import CircleComponent from './CircleComponent';
 import ContainerComponent from './ContainerComponent';
+import DateTimePickerComponent from './DateTimePickerComponent';
+import DropdownPickerComponent from './DropdownPickerComponent';
 import EventItemComponent from './EventItemComponent';
 import InputComponent from './InputComponent';
 import RowComponent from './RowComponent';
@@ -32,4 +34,6 @@ export {
   AvatarGroupComponent,
   CardPromotionComponent,
   SelectLocationComponent,
+  DateTimePickerComponent,
+  DropdownPickerComponent,
 };

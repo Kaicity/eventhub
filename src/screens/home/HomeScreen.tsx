@@ -47,22 +47,7 @@ const HomeScreen = ({navigation}: any) => {
         });
       }
     });
-
-    // geocodeByAddress('317 Nguyễn Văn Luông Phường 12 Quận 6');
   }, []);
-
-  // const geocodeByAddress = async (address: string) => {
-  //   try {
-  //     const res = await mapAPI.HandleMaps(
-  //       'https://geocode.search.hereapi.com/v1/geocode',
-  //       {q: address},
-  //       undefined,
-  //     );
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.error('Geocode error:', error);
-  //   }
-  // };
 
   const reverseGeoCode = async ({lat, long}: {lat: number; long: number}) => {
     try {
@@ -72,8 +57,8 @@ const HomeScreen = ({navigation}: any) => {
         undefined,
       );
 
-      if (res.data.items.length > 0) {
-        const item = res.data.items[0];
+      if (res.items.length > 0) {
+        const item = res.items[0];
         setCurrentLocation(item);
       }
     } catch (error) {
@@ -110,16 +95,8 @@ const HomeScreen = ({navigation}: any) => {
 
             <View style={[{flex: 1, alignItems: 'center'}]}>
               <RowComponent onPress={() => {}}>
-                <TextComponent
-                  text="Current Location"
-                  color={appColors.white_2}
-                  size={12}
-                />
-                <MaterialIcons
-                  name="arrow-drop-down"
-                  size={24}
-                  color={appColors.white}
-                />
+                <TextComponent text="Current Location" color={appColors.white_2} size={12} />
+                <MaterialIcons name="arrow-drop-down" size={24} color={appColors.white} />
               </RowComponent>
 
               {currenLocation && (
@@ -141,15 +118,8 @@ const HomeScreen = ({navigation}: any) => {
           </RowComponent>
           <SpaceComponent height={16} />
           {/* BAR MIDDLE */}
-          <RowComponent
-            onPress={() =>
-              navigation.navigate('SearchEvents', {isFilters: false})
-            }>
-            <SearchNormal1
-              size={20}
-              color={appColors.white}
-              variant="TwoTone"
-            />
+          <RowComponent onPress={() => navigation.navigate('SearchEvents', {isFilters: false})}>
+            <SearchNormal1 size={20} color={appColors.white} variant="TwoTone" />
             <View
               style={{
                 width: 1,
@@ -158,12 +128,7 @@ const HomeScreen = ({navigation}: any) => {
                 marginHorizontal: 10,
               }}
             />
-            <TextComponent
-              flex={1}
-              text="Search.."
-              color={appColors.gray_4}
-              size={18}
-            />
+            <TextComponent flex={1} text="Search.." color={appColors.gray_4} size={18} />
 
             <TagComponent
               onPress={() => {
@@ -187,9 +152,7 @@ const HomeScreen = ({navigation}: any) => {
         </View>
       </View>
 
-      <ScrollView
-        style={{flex: 1, marginTop: 16}}
-        showsVerticalScrollIndicator={false}>
+      <ScrollView style={{flex: 1, marginTop: 16}} showsVerticalScrollIndicator={false}>
         <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 20}}>
           <TabBarComponent title="Upcoming Events" onPress={() => {}} />
           <FlatList
@@ -197,11 +160,7 @@ const HomeScreen = ({navigation}: any) => {
             horizontal
             data={Array.from({length: 5})}
             renderItem={({item, index}) => (
-              <EventItemComponent
-                key={`event${index}`}
-                item={eventItems}
-                type="card"
-              />
+              <EventItemComponent key={`event${index}`} item={eventItems} type="card" />
             )}
           />
 
@@ -242,11 +201,7 @@ const HomeScreen = ({navigation}: any) => {
           <FlatList
             data={Array.from({length: 3})}
             renderItem={({item, index}) => (
-              <EventItemComponent
-                key={`event${index}`}
-                item={eventItems}
-                type="list"
-              />
+              <EventItemComponent key={`event${index}`} item={eventItems} type="list" />
             )}
             scrollEnabled={false}
           />

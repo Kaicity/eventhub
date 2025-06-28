@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import axiosAccess from './axiosAccess';
 
 class MapAPI {
   private HERE_API_KEY = process.env.NEXT_PUBLIC_HERE_API_KEY;
@@ -9,7 +9,7 @@ class MapAPI {
     data?: any,
     methob?: 'get' | 'post' | 'put' | 'delete',
   ) => {
-    return await axiosClient(url, {
+    return await axiosAccess(url, {
       method: methob ?? 'get',
       params: {
         ...params,

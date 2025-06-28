@@ -23,7 +23,9 @@ const CircleComponent = (props: Props) => {
   };
 
   return onpress ? (
-    <TouchableOpacity style={[localStyle, styles]}>{children}</TouchableOpacity>
+    <TouchableOpacity onPress={onpress} style={[localStyle, styles]}>
+      {children}
+    </TouchableOpacity>
   ) : (
     <View style={[localStyle, styles]}>{children}</View>
   );
